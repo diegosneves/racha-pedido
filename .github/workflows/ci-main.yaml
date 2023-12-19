@@ -1,0 +1,54 @@
+# Este fluxo de trabalho construirá um projeto Java com Maven e armazenará em cache/restaurará quaisquer dependências para melhorar o tempo de execução do fluxo de trabalho
+# Para obter mais informações, consulte: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-maven
+
+name: CI Main
+
+on:
+  pull_request: # Essas linhas indica que toda pull_request apontada para a branch main sera executado a CI
+    branches:
+      - main
+jobs:
+  check-application:
+    strategy:
+      matrix:
+        ubuntu: ['ubuntu-latest']
+        java: ['17']
+    runs-on: ${{ matrix.ubuntu }}
+    steps:
+      - name: Checkout codigo
+        uses: actions/checkout@v3
+
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'corretto'
+          java-version: ${{ matrix.java }}
+
+      - name: Setup Maven
+        run: |
+            sudo apt-get install -y maven
+
+      - name: Install Dependencies
+        run: mvn clean install -DskipTests
+
+      - name: Run Tests
+        run: mvn test
+#TODO Descomentar essa linha apos as variaveis serem inseridas no Github e o dockerfile estar pronto...
+#      - name: Set up QEMU
+#        uses: docker/setup-qemu-action@v2
+#
+#      - name: Set up Docker Buildx
+#        uses: docker/setup-buildx-action@v2
+#
+#      - name: Login to DockerHub
+#        uses: docker/login-action@v2
+#        with:
+#          username: ${{ secrets.DOCKERHUB_USERNAME }}
+#          password: ${{ secrets.DOCKERHUB_TOKEN }}
+#
+#      - name: Build and push
+#        id: docker_build
+#        uses: docker/build-push-action@v4
+#        with:
+#          push: true
+#          tags: diegoneves/racha-pedido:latest

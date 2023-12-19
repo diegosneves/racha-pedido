@@ -1,0 +1,28 @@
+server:
+  port: 8080
+
+spring:
+#  datasource:
+#    url: jdbc:mysql://${DB_HOST}:${DB_PORT}/transferenciadb
+#    username: root
+#    password: Fluxo@123 TODO validar e remover posterior
+
+  api:
+    url:
+      servico-autorizador: https://run.mocky.io/v3/5794d450-d2e2-4412-8131-73d0293ac1cc
+      enviar-notificacao: https://run.mocky.io/v3/54dc2cf1-3add-45b5-b5a9-6bf7e7f1f4a6
+
+#  jpa:
+#    hibernate:
+#      ddl-auto: update
+#    show-sql: true
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+
+logging:
+  level:
+    org:
+    springframework:
+     security: DEBUG
