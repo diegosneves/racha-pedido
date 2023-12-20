@@ -1,5 +1,6 @@
-package diegosneves.github.rachapedido.model;
+package diegosneves.github.rachapedido.dto;
 
+import diegosneves.github.rachapedido.model.Item;
 import lombok.*;
 
 import java.util.List;
@@ -9,11 +10,10 @@ import java.util.List;
 @Getter
 @Setter
 @Builder
-public class Person {
+public class PersonDTO {
 
     private String name;
     private String email;
-    private Boolean isBuyer;
     private List<Item> items;
 
 }
