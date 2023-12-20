@@ -52,3 +52,14 @@ jobs:
 #        with:
 #          push: true
 #          tags: diegoneves/racha-pedido:latest
+
+
+#      - name: Build and push
+#        id: docker_build
+#        uses: docker/build-push-action@v4
+#        with:
+#          push: true
+#          tags: diegoneves/racha-pedido:latest
+#          build-args: MY_ENV_VAR=${{ env.MY_ENV_VAR }}
+#        env:
+#          MY_ENV_VAR: my_value

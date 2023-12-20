@@ -5,10 +5,10 @@
   <img align="center" alt="Diego-Docker" height="30" width="40" src="https://raw.githubusercontent.com/devicons/devicon/master/icons/docker/docker-plain.svg">
 </div>
 
-[![Linkedin badge](https://img.shields.io/badge/-Linkedin-blue?flat-square&logo=Linkedin&logoColor=white&link=https://www.linkedin.com/in/diego-neves-224208177/)](https://www.linkedin.com/in/diego-neves-224208177/)
-[![CI Racha Pedido](https://github.com/diegosneves/racha-pedido/actions/workflows/ci-main.yml/badge.svg)](https://github.com/diegosneves/racha-pedido/actions/workflows/ci-main.yml)
-
 ---
+[![Linkedin badge](https://img.shields.io/badge/-Linkedin-blue?flat-square&logo=Linkedin&logoColor=white&link=https://www.linkedin.com/in/diego-neves-224208177/)](https://www.linkedin.com/in/diego-neves-224208177/)
+[![CI Racha Pedido](https://github.com/diegosneves/racha-pedido/actions/workflows/ci-main.yaml/badge.svg)](https://github.com/diegosneves/racha-pedido/actions/workflows/ci-main.yaml)
+
 O **Racha Pedido** é uma solução inteligente para resolver o desafio comum enfrentado por equipes de trabalho ao dividir
 lanches ou refeições solicitados por meio de aplicativos de entrega como iFood ou Uber Eats.
 
