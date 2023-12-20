@@ -28,7 +28,7 @@ public class OpenApiConfig {
     }
 
     private List<Tag> getTags() { // TODO - Ajustar as tags do swagger
-        return List.of(new Tag().name("Racha-Pedido").description("Operações relacionadas a divisão dos valores do pedido"));
+        return List.of(new Tag().name("Racha Pedido").description("Operações relacionadas a divisão dos valores do pedido"));
     }
 
 }
