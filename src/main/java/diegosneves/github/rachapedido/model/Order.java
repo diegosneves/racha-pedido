@@ -2,6 +2,7 @@ package diegosneves.github.rachapedido.model;
 
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @NoArgsConstructor
@@ -13,6 +14,6 @@ public class Order {
 
     private Double deliveryFee;
     private Double discount;
-    private List<Item> items;
+    private List<Item> items = new ArrayList<>();
 
 }

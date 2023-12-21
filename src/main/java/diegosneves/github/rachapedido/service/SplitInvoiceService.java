@@ -1,5 +1,7 @@
 package diegosneves.github.rachapedido.service;
 
+import diegosneves.github.rachapedido.model.Order;
+import diegosneves.github.rachapedido.model.Person;
 import diegosneves.github.rachapedido.request.SplitInvoiceRequest;
 import diegosneves.github.rachapedido.response.SplitInvoiceResponse;
 import diegosneves.github.rachapedido.service.contract.OrderServiceContract;
@@ -7,6 +9,8 @@ import diegosneves.github.rachapedido.service.contract.PersonServiceContract;
 import diegosneves.github.rachapedido.service.contract.SplitInvoiceServiceContract;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class SplitInvoiceService implements SplitInvoiceServiceContract {
@@ -22,6 +26,8 @@ public class SplitInvoiceService implements SplitInvoiceServiceContract {
 
     @Override
     public SplitInvoiceResponse splitInvoice(SplitInvoiceRequest request) {
+        List<Person> consumers = this.personService.getConsumers(request.getBuyer(), request.getSplitInvoiceWith());
+        List<Order> orders;
         return new SplitInvoiceResponse();
     }
 }

@@ -2,6 +2,7 @@ package diegosneves.github.rachapedido.model;
 
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @NoArgsConstructor
@@ -11,9 +12,9 @@ import java.util.List;
 @Builder
 public class Person {
 
-    private String name;
+    private String personName;
     private String email;
-    private Boolean isBuyer;
-    private List<Item> items;
+    private Boolean isBuyer = Boolean.FALSE;
+    private List<Item> items = new ArrayList<>();
 
 }
