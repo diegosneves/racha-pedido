@@ -1,7 +1,9 @@
 package diegosneves.github.rachapedido.response;
 
-import diegosneves.github.rachapedido.dto.PersonDTO;
+import diegosneves.github.rachapedido.model.Invoice;
 import lombok.*;
+
+import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -9,5 +11,6 @@ import lombok.*;
 @Setter
 @Builder
 public class SplitInvoiceResponse {
-    private PersonDTO buyer; // TODO - Definir os campos de retorno
+    private List<Invoice> invoices;
+    private Double totalPayable;
 }
