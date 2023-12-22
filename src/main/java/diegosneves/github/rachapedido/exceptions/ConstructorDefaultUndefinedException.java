@@ -2,7 +2,9 @@ package diegosneves.github.rachapedido.exceptions;
 
 /**
  * A classe {@link ConstructorDefaultUndefinedException} é uma exceção que será lançada quando uma classe não possuir um construtor padrão.
+ *
  * @see RuntimeException
+ * @author diegosneves
  */
 public class ConstructorDefaultUndefinedException extends RuntimeException {
 

@@ -10,6 +10,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * A classe {@link SplitInvoiceController} é responsável por lidar com solicitações HTTP relacionadas à divisão de faturas.
+ * Implementa a interface {@link SplitInvoiceControllerContract}.
+ *
+ */
 @RestController
 @RequestMapping("/split")
 public class SplitInvoiceController implements SplitInvoiceControllerContract {

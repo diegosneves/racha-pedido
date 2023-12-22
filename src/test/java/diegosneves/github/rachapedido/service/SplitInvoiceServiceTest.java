@@ -6,6 +6,7 @@ import diegosneves.github.rachapedido.model.Invoice;
 import diegosneves.github.rachapedido.model.Item;
 import diegosneves.github.rachapedido.request.SplitInvoiceRequest;
 import diegosneves.github.rachapedido.response.SplitInvoiceResponse;
+import net.bytebuddy.implementation.bind.annotation.IgnoreForBinding;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -57,6 +58,7 @@ class SplitInvoiceServiceTest {
     }
 
     @Test
+    @IgnoreForBinding
     void whenReceivingInvoiceThenDivisionMustBeCarriedOut() {
 
         SplitInvoiceResponse response = this.service.splitInvoice(this.request);

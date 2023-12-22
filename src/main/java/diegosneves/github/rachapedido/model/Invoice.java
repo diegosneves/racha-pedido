@@ -11,6 +11,7 @@ public class Invoice {
 
     private String consumerName;
     private Double valueConsumed;
-    private Double percentageConsumed;
+    private Double totalPayable;
+    private Double percentageConsumedTotalBill;
 
 }

@@ -2,6 +2,9 @@ package diegosneves.github.rachapedido.exceptions;
 
 /**
  * A classe {@link NullBuyerException} representa uma exceção lançada quando um objeto comprador é nulo.
+ *
+ * @see RuntimeException
+ * @author diegosneves
  */
 public class NullBuyerException extends RuntimeException {
 

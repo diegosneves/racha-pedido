@@ -3,12 +3,16 @@ package diegosneves.github.rachapedido.exceptions;
 import org.springframework.http.HttpStatus;
 
 /**
- * O {@link  ErroHandler} é um enum que representa diferentes manipuladores de erros. Com o objetivo de padrozinar as mensagens de erro.
+ * A enum {@link ErroHandler} representa diferentes manipuladores de erros,
+ * buscando padronizar as mensagens de erro.
+ *
+ * @author diegosneves
  */
 public enum ErroHandler {
 
     CONSTRUCTOR_DEFAULT_UNDEFINED("Classe [ %s ] deve declarar um construtor padrão.", HttpStatus.NOT_IMPLEMENTED),
     NULL_BUYER("O Objeto [ %s ] não deve ser nulo.", HttpStatus.BAD_REQUEST),
+    ORDER_FAILED("Houve um erro no fechamento do pedido: [ %s ].", HttpStatus.BAD_REQUEST), // TODO - Buscar deixar os demais nessa forma mais generica
     CLASS_MAPPING_FAILURE("Ocorreu um erro ao tentar mapear a classe [ %s ].", HttpStatus.INTERNAL_SERVER_ERROR);
 
     private final String message;
@@ -30,12 +34,20 @@ public enum ErroHandler {
     }
 
     /**
-     * Retorna o código de status da resposta HTTP.
+     * Retorna o código de status HTTP associado ao erro.
      *
-     * @return O código de status da resposta HTTP.
+     * @return O código numérico do status HTTP relacionado com o erro.
      */
-    public int getStatusCode() {
+    public int getStatusCodeValue() {
         return this.httpStatus.value();
     }
 
+    /**
+     * Obtém o status HTTP associado ao erro.
+     *
+     * @return O código de status HTTP relacionado ao erro.
+     */
+    public HttpStatus getHttpStatusCode() {
+        return this.httpStatus;
+    }
 }

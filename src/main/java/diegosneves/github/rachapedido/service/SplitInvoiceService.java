@@ -27,7 +27,8 @@ public class SplitInvoiceService implements SplitInvoiceServiceContract {
     @Override
     public SplitInvoiceResponse splitInvoice(SplitInvoiceRequest request) {
         List<Person> consumers = this.personService.getConsumers(request.getBuyer(), request.getSplitInvoiceWith());
-        List<Order> orders;
+        List<Order> closeOrder = this.orderService.closeOrder(consumers);
+
         return new SplitInvoiceResponse();
     }
 }

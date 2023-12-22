@@ -2,6 +2,9 @@ package diegosneves.github.rachapedido.exceptions;
 
 /**
  * O {@link MapperFailureException} representa uma exceção que é lançada quando ocorre um erro durante o mapeamento de classes.
+ *
+ * @see RuntimeException
+ * @author diegosneves
  */
 public class MapperFailureException extends RuntimeException {
 
