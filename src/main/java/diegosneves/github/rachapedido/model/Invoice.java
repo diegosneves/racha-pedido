@@ -13,5 +13,6 @@ public class Invoice {
     private Double valueConsumed;
     private Double totalPayable;
     private Double percentageConsumedTotalBill;
+    private String paymentLink;
 
 }

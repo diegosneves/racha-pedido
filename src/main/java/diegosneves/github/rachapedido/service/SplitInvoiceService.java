@@ -1,10 +1,11 @@
 package diegosneves.github.rachapedido.service;
 
-import diegosneves.github.rachapedido.model.Order;
+import diegosneves.github.rachapedido.mapper.BuilderMapper;
+import diegosneves.github.rachapedido.model.BillSplit;
 import diegosneves.github.rachapedido.model.Person;
 import diegosneves.github.rachapedido.request.SplitInvoiceRequest;
 import diegosneves.github.rachapedido.response.SplitInvoiceResponse;
-import diegosneves.github.rachapedido.service.contract.OrderServiceContract;
+import diegosneves.github.rachapedido.service.contract.InvoiceServiceContract;
 import diegosneves.github.rachapedido.service.contract.PersonServiceContract;
 import diegosneves.github.rachapedido.service.contract.SplitInvoiceServiceContract;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,20 +16,20 @@ import java.util.List;
 @Service
 public class SplitInvoiceService implements SplitInvoiceServiceContract {
 
-    private final OrderServiceContract orderService;
     private final PersonServiceContract personService;
+    private final InvoiceServiceContract invoiceService;
 
     @Autowired
-    public SplitInvoiceService(OrderServiceContract orderService, PersonServiceContract personService) {
-        this.orderService = orderService;
+    public SplitInvoiceService(PersonServiceContract personService, InvoiceServiceContract invoiceService) {
         this.personService = personService;
+        this.invoiceService = invoiceService;
     }
 
     @Override
     public SplitInvoiceResponse splitInvoice(SplitInvoiceRequest request) {
         List<Person> consumers = this.personService.getConsumers(request.getBuyer(), request.getSplitInvoiceWith());
-        List<Order> closeOrder = this.orderService.closeOrder(consumers);
+        BillSplit billSplit = this.invoiceService.generateInvoice(consumers, request.getDiscountType(), request.getDiscount(), request.getDeliveryFee());
 
-        return new SplitInvoiceResponse();
+        return BuilderMapper.builderMapper(SplitInvoiceResponse.class, billSplit);
     }
 }

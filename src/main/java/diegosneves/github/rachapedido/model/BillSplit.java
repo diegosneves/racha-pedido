@@ -1,6 +1,5 @@
-package diegosneves.github.rachapedido.response;
+package diegosneves.github.rachapedido.model;
 
-import diegosneves.github.rachapedido.model.Invoice;
 import lombok.*;
 
 import java.util.List;
@@ -10,8 +9,9 @@ import java.util.List;
 @Getter
 @Setter
 @Builder
-public class SplitInvoiceResponse {
+public class BillSplit {
 
     private List<Invoice> invoices;
     private Double totalPayable;
+
 }
