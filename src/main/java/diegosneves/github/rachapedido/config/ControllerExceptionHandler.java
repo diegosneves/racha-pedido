@@ -1,6 +1,7 @@
 package diegosneves.github.rachapedido.config;
 
 import diegosneves.github.rachapedido.dto.ExceptionDTO;
+import diegosneves.github.rachapedido.exceptions.CalculateInvoiceException;
 import diegosneves.github.rachapedido.exceptions.CloseOrderException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +14,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
  * A classe é anotada com {@link RestControllerAdvice} para aplicar o tratamento de exceção globalmente
  * a todas as classes de controlador.
  *
- * @autor diegosneves
+ * @author diegosneves
  */
 @RestControllerAdvice
 public class ControllerExceptionHandler {
@@ -28,6 +29,12 @@ public class ControllerExceptionHandler {
     public ResponseEntity<ExceptionDTO> orderRelatedFaileures(CloseOrderException exception) {
         ExceptionDTO dto = new ExceptionDTO(exception.getMessage(), CloseOrderException.ERROR.getStatusCodeValue());
         return ResponseEntity.status(CloseOrderException.ERROR.getHttpStatusCode()).body(dto);
+    }
+
+    @ExceptionHandler(CalculateInvoiceException.class)
+    public ResponseEntity<ExceptionDTO> orderRelatedFaileures(CalculateInvoiceException exception) {
+        ExceptionDTO dto = new ExceptionDTO(exception.getMessage(), CalculateInvoiceException.ERROR.getStatusCodeValue());
+        return ResponseEntity.status(CalculateInvoiceException.ERROR.getHttpStatusCode()).body(dto);
     }
 
 }
