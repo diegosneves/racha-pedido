@@ -4,16 +4,22 @@ import diegosneves.github.rachapedido.controller.contract.SplitInvoiceController
 import diegosneves.github.rachapedido.request.SplitInvoiceRequest;
 import diegosneves.github.rachapedido.response.SplitInvoiceResponse;
 import diegosneves.github.rachapedido.service.SplitInvoiceService;
+import diegosneves.github.rachapedido.service.contract.SplitInvoiceServiceContract;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * A classe {@link SplitInvoiceController} é responsável por lidar com solicitações HTTP relacionadas à divisão de faturas.
+ * Implementa a interface {@link SplitInvoiceControllerContract}.
+ *
+ */
 @RestController
 @RequestMapping("/split")
 public class SplitInvoiceController implements SplitInvoiceControllerContract {
 
-    private final SplitInvoiceService service;
+    private final SplitInvoiceServiceContract service;
 
     public SplitInvoiceController(@Autowired SplitInvoiceService service) {
         this.service = service;
@@ -22,7 +28,7 @@ public class SplitInvoiceController implements SplitInvoiceControllerContract {
 
     @Override
     public ResponseEntity<SplitInvoiceResponse> splitInvoice(SplitInvoiceRequest request) {
-        SplitInvoiceResponse response = this.service.updateEmail(request); // TODO - Criar a regra de negocio
+        SplitInvoiceResponse response = this.service.splitInvoice(request); // TODO - Criar a regra de negocio
         return ResponseEntity.ok(response);
     }
 }

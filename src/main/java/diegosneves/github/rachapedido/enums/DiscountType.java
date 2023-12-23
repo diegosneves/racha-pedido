@@ -3,14 +3,18 @@ package diegosneves.github.rachapedido.enums;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * Representa o tipo de desconto.
+ * Representa os diferentes tipos de descontos que podem ser aplicados.
+ *
+ * @author diegosneves
  */
 public enum DiscountType {
 
     @JsonProperty(value = "cash")
     CASH(1.0),
     @JsonProperty(value = "percentage")
-    PERCENTAGE(100.0);
+    PERCENTAGE(100.0),
+    @JsonProperty(value = "no discount")
+    NO_DISCOUNT(0.0);
 
     private final Double calculation;
 
@@ -19,7 +23,7 @@ public enum DiscountType {
     }
 
     public Double discountAmount(Double value) {
-        return value / this.calculation;
+        return this.calculation == 0.0 ? 0.0 : value / this.calculation;
     }
 
 }

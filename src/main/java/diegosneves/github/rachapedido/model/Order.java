@@ -2,8 +2,12 @@ package diegosneves.github.rachapedido.model;
 
 import lombok.*;
 
-import java.util.List;
-
+/**
+ * A classe {@link Order} representa um pedido feito por um {@link Person consumidor}.
+ * Cada pedido contém o {@link String nome do consumidor} e o {@link Double valor total consumido}.
+ *
+ * @author diegosneves
+ */
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -11,8 +15,7 @@ import java.util.List;
 @Builder
 public class Order {
 
-    private Double deliveryFee;
-    private Double discount;
-    private List<Item> items;
+    private String consumerName;
+    private Double valueConsumed;
 
 }

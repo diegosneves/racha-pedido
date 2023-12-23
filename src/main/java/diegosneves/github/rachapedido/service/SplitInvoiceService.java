@@ -1,18 +1,35 @@
 package diegosneves.github.rachapedido.service;
 
+import diegosneves.github.rachapedido.mapper.BuilderMapper;
+import diegosneves.github.rachapedido.model.BillSplit;
+import diegosneves.github.rachapedido.model.Person;
 import diegosneves.github.rachapedido.request.SplitInvoiceRequest;
 import diegosneves.github.rachapedido.response.SplitInvoiceResponse;
+import diegosneves.github.rachapedido.service.contract.InvoiceServiceContract;
+import diegosneves.github.rachapedido.service.contract.PersonServiceContract;
+import diegosneves.github.rachapedido.service.contract.SplitInvoiceServiceContract;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
-public class SplitInvoiceService {
+public class SplitInvoiceService implements SplitInvoiceServiceContract {
 
-    // TODO - Criar as regras de Negocio
+    private final PersonServiceContract personService;
+    private final InvoiceServiceContract invoiceService;
 
-    public SplitInvoiceResponse updateEmail(SplitInvoiceRequest request) {
-        final String TEST_EMAIL = "teste@teste.com.br";
-        request.getBuyer().setEmail(TEST_EMAIL);
+    @Autowired
+    public SplitInvoiceService(PersonServiceContract personService, InvoiceServiceContract invoiceService) {
+        this.personService = personService;
+        this.invoiceService = invoiceService;
+    }
 
-        return new SplitInvoiceResponse(request.getBuyer());
+    @Override
+    public SplitInvoiceResponse splitInvoice(SplitInvoiceRequest request) {
+        List<Person> consumers = this.personService.getConsumers(request.getBuyer(), request.getSplitInvoiceWith());
+        BillSplit billSplit = this.invoiceService.generateInvoice(consumers, request.getDiscountType(), request.getDiscount(), request.getDeliveryFee());
+
+        return BuilderMapper.builderMapper(SplitInvoiceResponse.class, billSplit);
     }
 }
