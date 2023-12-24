@@ -1,9 +1,11 @@
 package diegosneves.github.rachapedido.service;
 
+import diegosneves.github.rachapedido.core.BankAccount;
 import diegosneves.github.rachapedido.dto.InvoiceDTO;
 import diegosneves.github.rachapedido.enums.DiscountType;
 import diegosneves.github.rachapedido.exceptions.CalculateInvoiceException;
 import diegosneves.github.rachapedido.model.*;
+import diegosneves.github.rachapedido.service.contract.EmailServiceContract;
 import diegosneves.github.rachapedido.service.contract.OrderServiceContract;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,7 +20,8 @@ import java.lang.reflect.Method;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(SpringExtension.class)
 class InvoiceServiceTest {
@@ -32,12 +35,11 @@ class InvoiceServiceTest {
     @Mock
     private OrderServiceContract orderService;
 
+    @Mock
+    private EmailServiceContract emailService;
+
     private Person consumerI;
     private Person consumerII;
-
-    private Item itemI;
-    private Item itemII;
-    private Item itemIII;
 
     private Order orderI;
     private Order orderII;
@@ -45,17 +47,17 @@ class InvoiceServiceTest {
     List<Order> orders;
     @BeforeEach
     void setUp() {
-        this.itemI = Item.builder()
+        Item itemI = Item.builder()
                 .name("Hamburguer")
                 .price(40.0)
                 .build();
 
-        this.itemII = Item.builder()
+        Item itemII = Item.builder()
                 .name("Sobremesa")
                 .price(2.0)
                 .build();
 
-        this.itemIII = Item.builder()
+        Item itemIII = Item.builder()
                 .name("Sanduíche")
                 .price(8.0)
                 .build();
@@ -64,13 +66,13 @@ class InvoiceServiceTest {
                 .isBuyer(Boolean.TRUE)
                 .personName("Fulano")
                 .email("fulano@gmail.com")
-                .items(List.of(this.itemI, this.itemII))
+                .items(List.of(itemI, itemII))
                 .build();
 
         this.consumerII = Person.builder()
                 .personName("Amigo")
                 .email("amigo@gmail.com")
-                .items(List.of(this.itemIII))
+                .items(List.of(itemIII))
                 .build();
 
         this.orderI = Order.builder()
@@ -88,24 +90,28 @@ class InvoiceServiceTest {
 
     @Test
     void whenReceiveInvoiceDataThenReturnBillSplit() {
+        String paymentLink = "https://nubank.com.br/cobrar/5h2au/658235a8-f38a-4cf5-881c-1de7114d66c7";
+
         when(orderService.closeOrder(List.of(this.consumerI, this.consumerII))).thenReturn(orders);
 
-        BillSplit actual = this.service.generateInvoice(List.of(this.consumerI, this.consumerII), DiscountType.CASH, 20.0, 8.0);
 
-//        assertNull(actual);
+        BillSplit actual = this.service.generateInvoice(List.of(this.consumerI, this.consumerII), DiscountType.CASH, 20.0, 8.0, BankAccount.NUBANK);
+
+        verify(this.emailService, atLeastOnce()).sendPaymentEmail(any(NotificationEmail.class));
+
         assertNotNull(actual);
-//        assertEquals(2, actual.getInvoices().size());
-//        assertEquals("Fulano", actual.getInvoices().get(0).getConsumerName());
-//        assertEquals(42.0, actual.getInvoices().get(0).getValueConsumed());
-//        assertEquals(31.92, actual.getInvoices().get(0).getTotalPayable());
-//        assertEquals(84.0, actual.getInvoices().get(0).getPercentageConsumedTotalBill());
-//        assertEquals("link", actual.getInvoices().get(0).getPaymentLink());
-//        assertEquals("Amigo", actual.getInvoices().get(1).getConsumerName());
-//        assertEquals(8.0, actual.getInvoices().get(1).getValueConsumed());
-//        assertEquals(6.08, actual.getInvoices().get(1).getTotalPayable());
-//        assertEquals(16.0, actual.getInvoices().get(1).getPercentageConsumedTotalBill());
-//        assertEquals("link", actual.getInvoices().get(1).getPaymentLink());
-//        assertEquals(38.0, actual.getTotalPayable());
+        assertEquals(2, actual.getInvoices().size());
+        assertEquals("Fulano", actual.getInvoices().get(0).getConsumerName());
+        assertEquals(42.0, actual.getInvoices().get(0).getValueConsumed());
+        assertEquals(31.92, actual.getInvoices().get(0).getTotalPayable());
+        assertEquals(0.84, actual.getInvoices().get(0).getPercentageConsumedTotalBill());
+        assertEquals(paymentLink, actual.getInvoices().get(0).getPaymentLink());
+        assertEquals("Amigo", actual.getInvoices().get(1).getConsumerName());
+        assertEquals(8.0, actual.getInvoices().get(1).getValueConsumed());
+        assertEquals(6.08, actual.getInvoices().get(1).getTotalPayable());
+        assertEquals(0.16, actual.getInvoices().get(1).getPercentageConsumedTotalBill());
+        assertEquals(paymentLink, actual.getInvoices().get(1).getPaymentLink());
+        assertEquals(38.0, actual.getTotalPayable());
     }
 
 

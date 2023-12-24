@@ -1,7 +1,7 @@
 package diegosneves.github.rachapedido.service.contract;
 
 import diegosneves.github.rachapedido.dto.PersonDTO;
-import diegosneves.github.rachapedido.exceptions.NullBuyerException;
+import diegosneves.github.rachapedido.exceptions.PersonConstraintsException;
 import diegosneves.github.rachapedido.model.Person;
 
 import java.util.List;
@@ -20,8 +20,8 @@ public interface PersonServiceContract {
      * @param buyer As informações do {@link PersonDTO comprador}.
      * @param consumers A lista de {@link PersonDTO consumidores}.
      * @return A lista com todos os {@link Person consumidores}.
-     * @throws NullBuyerException Se o comprador for nulo.
+     * @throws PersonConstraintsException Se o comprador for nulo.
      */
-    List<Person> getConsumers(PersonDTO buyer, List<PersonDTO> consumers) throws NullBuyerException;
+    List<Person> getConsumers(PersonDTO buyer, List<PersonDTO> consumers) throws PersonConstraintsException;
 
 }
