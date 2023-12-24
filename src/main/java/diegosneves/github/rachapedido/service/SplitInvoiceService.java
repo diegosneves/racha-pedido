@@ -8,6 +8,7 @@ import diegosneves.github.rachapedido.response.SplitInvoiceResponse;
 import diegosneves.github.rachapedido.service.contract.InvoiceServiceContract;
 import diegosneves.github.rachapedido.service.contract.PersonServiceContract;
 import diegosneves.github.rachapedido.service.contract.SplitInvoiceServiceContract;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,9 +27,9 @@ public class SplitInvoiceService implements SplitInvoiceServiceContract {
     }
 
     @Override
-    public SplitInvoiceResponse splitInvoice(SplitInvoiceRequest request) {
+    public SplitInvoiceResponse splitInvoice(@Valid SplitInvoiceRequest request) {
         List<Person> consumers = this.personService.getConsumers(request.getBuyer(), request.getSplitInvoiceWith());
-        BillSplit billSplit = this.invoiceService.generateInvoice(consumers, request.getDiscountType(), request.getDiscount(), request.getDeliveryFee());
+        BillSplit billSplit = this.invoiceService.generateInvoice(consumers, request.getDiscountType(), request.getDiscount(), request.getDeliveryFee(), request.getSelectedBank());
 
         return BuilderMapper.builderMapper(SplitInvoiceResponse.class, billSplit);
     }

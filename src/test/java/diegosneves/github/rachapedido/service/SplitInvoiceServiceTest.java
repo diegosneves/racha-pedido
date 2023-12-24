@@ -1,5 +1,6 @@
 package diegosneves.github.rachapedido.service;
 
+import diegosneves.github.rachapedido.core.BankAccount;
 import diegosneves.github.rachapedido.dto.PersonDTO;
 import diegosneves.github.rachapedido.enums.DiscountType;
 import diegosneves.github.rachapedido.model.*;
@@ -7,7 +8,6 @@ import diegosneves.github.rachapedido.request.SplitInvoiceRequest;
 import diegosneves.github.rachapedido.response.SplitInvoiceResponse;
 import diegosneves.github.rachapedido.service.contract.InvoiceServiceContract;
 import diegosneves.github.rachapedido.service.contract.PersonServiceContract;
-import net.bytebuddy.implementation.bind.annotation.IgnoreForBinding;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -42,8 +42,6 @@ class SplitInvoiceServiceTest {
     private Person consumerII;
 
     private BillSplit billSplit;
-    private Invoice invoiceI;
-    private Invoice invoiceII;
 
     @BeforeEach
     void setUp() {
@@ -61,6 +59,7 @@ class SplitInvoiceServiceTest {
 
         this.request = SplitInvoiceRequest.builder()
                 .buyer(this.buyer)
+                .selectedBank(BankAccount.NUBANK)
                 .splitInvoiceWith(List.of(this.friend))
                 .deliveryFee(8.0)
                 .discount(20.0)
@@ -80,7 +79,7 @@ class SplitInvoiceServiceTest {
                 .items(List.of(new Item("Sanduíche", 8.0)))
                 .build();
 
-        this.invoiceI = Invoice.builder()
+        Invoice invoiceI = Invoice.builder()
                 .consumerName("Fulano")
                 .valueConsumed(42.0)
                 .totalPayable(31.92)
@@ -88,7 +87,7 @@ class SplitInvoiceServiceTest {
                 .paymentLink("n/a")
                 .build();
 
-        this.invoiceII = Invoice.builder()
+        Invoice invoiceII = Invoice.builder()
                 .consumerName("Amigo")
                 .valueConsumed(8.0)
                 .totalPayable(6.08)
@@ -97,7 +96,7 @@ class SplitInvoiceServiceTest {
                 .build();
 
         this.billSplit = BillSplit.builder()
-                .invoices(List.of(this.invoiceI, this.invoiceII))
+                .invoices(List.of(invoiceI, invoiceII))
                 .totalPayable(38.0)
                 .build();
 
@@ -106,12 +105,12 @@ class SplitInvoiceServiceTest {
     @Test
     void whenReceivingInvoiceThenDivisionMustBeCarriedOut() {
         when(this.personService.getConsumers(this.buyer, List.of(this.friend))).thenReturn(List.of(this.consumerI, this.consumerII));
-        when(this.invoiceService.generateInvoice(anyList(), eq(DiscountType.CASH), eq(20.0), eq(8.0))).thenReturn(this.billSplit);
+        when(this.invoiceService.generateInvoice(anyList(), eq(DiscountType.CASH), eq(20.0), eq(8.0), eq(BankAccount.NUBANK))).thenReturn(this.billSplit);
 
         SplitInvoiceResponse response = this.service.splitInvoice(this.request);
 
         verify(personService, times(1)).getConsumers(eq(buyer), eq(List.of(friend)));
-        verify(invoiceService, times(1)).generateInvoice(eq(List.of(consumerI, consumerII)), eq(DiscountType.CASH), eq(20.0), eq(8.0));
+        verify(invoiceService, times(1)).generateInvoice(eq(List.of(consumerI, consumerII)), eq(DiscountType.CASH), eq(20.0), eq(8.0), eq(BankAccount.NUBANK));
 
         assertNotNull(response);
         Invoice buyerInvoice = response.getInvoices().stream().filter(p -> p.getConsumerName().equals(this.buyer.getPersonName())).findFirst().orElse(null);

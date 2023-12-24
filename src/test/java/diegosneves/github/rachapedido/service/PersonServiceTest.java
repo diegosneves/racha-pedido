@@ -1,7 +1,7 @@
 package diegosneves.github.rachapedido.service;
 
 import diegosneves.github.rachapedido.dto.PersonDTO;
-import diegosneves.github.rachapedido.exceptions.NullBuyerException;
+import diegosneves.github.rachapedido.exceptions.PersonConstraintsException;
 import diegosneves.github.rachapedido.model.Item;
 import diegosneves.github.rachapedido.model.Person;
 import lombok.SneakyThrows;
@@ -11,6 +11,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +20,10 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(SpringExtension.class)
 class PersonServiceTest {
+
+    private static final String BUYER_ERROR = "É necessário fornecer informações válidas para o comprador.";
+    private static final String MISSING_NAME_ERROR_MESSAGE = "O nome é um campo obrigatório. Por favor, insira um nome.";
+    private static final String EMAIL_MISSING_ERROR_MESSAGE = "O email é um campo obrigatório. Por favor, insira um email.";
 
     @InjectMocks
     private PersonService service;
@@ -153,10 +158,86 @@ class PersonServiceTest {
 
     @Test
     void whenGetConsumersReceivePersonDTOBuyerNullThenThrowNullBuyerException() {
-        Exception exception = assertThrows(NullBuyerException.class, () -> service.getConsumers(null, List.of(personII)));
+        Exception exception = assertThrows(PersonConstraintsException.class, () -> service.getConsumers(null, List.of(personII)));
 
-        assertInstanceOf(NullBuyerException.class, exception);
-        assertEquals(NullBuyerException.ERROR.errorMessage(PersonDTO.class.getSimpleName()), exception.getMessage());
+        assertInstanceOf(PersonConstraintsException.class, exception);
+        assertEquals(PersonConstraintsException.ERROR.errorMessage(BUYER_ERROR), exception.getMessage());
+    }
+
+    @Test
+    @SneakyThrows
+    void whenValidateReceivePersonDTOIsOkThenReturnPersonDTO() {
+        String personNameExpect = "Buyer - Person I";
+        String emailExpect = "buyer@teste.com";
+
+        Method method = this.service.getClass().getDeclaredMethod("validatePersonData", PersonDTO.class);
+        method.setAccessible(true);
+
+        PersonDTO actual = (PersonDTO) method.invoke(this.service, this.personI);
+
+        assertNotNull(actual);
+        assertEquals(personNameExpect, actual.getPersonName());
+        assertEquals(emailExpect, actual.getEmail());
+        assertEquals(2, actual.getItems().size());
+        assertEquals(this.itemI, actual.getItems().get(0));
+        assertEquals(this.itemII, actual.getItems().get(1));
+
+    }
+
+    @Test
+    @SneakyThrows
+    void whenValidateReceiveNamelessPersonDTOThenReturnPersonDTO() {
+        this.personI.setPersonName("  ");
+
+        Method method = this.service.getClass().getDeclaredMethod("validatePersonData", PersonDTO.class);
+        method.setAccessible(true);
+
+        InvocationTargetException exception = assertThrows(InvocationTargetException.class, () -> method.invoke(this.service, this.personI));
+
+        assertInstanceOf(PersonConstraintsException.class, exception.getTargetException());
+        assertEquals(PersonConstraintsException.ERROR.errorMessage(MISSING_NAME_ERROR_MESSAGE), exception.getTargetException().getMessage());
+    }
+
+    @Test
+    @SneakyThrows
+    void whenValidateReceivePersonDTOWithNullNameThenReturnPersonDTO() {
+        this.personI.setPersonName(null);
+
+        Method method = this.service.getClass().getDeclaredMethod("validatePersonData", PersonDTO.class);
+        method.setAccessible(true);
+
+        InvocationTargetException exception = assertThrows(InvocationTargetException.class, () -> method.invoke(this.service, this.personI));
+
+        assertInstanceOf(PersonConstraintsException.class, exception.getTargetException());
+        assertEquals(PersonConstraintsException.ERROR.errorMessage(MISSING_NAME_ERROR_MESSAGE), exception.getTargetException().getMessage());
+    }
+
+    @Test
+    @SneakyThrows
+    void whenValidateReceivePersonDTOWithoutEmailThenReturnPersonDTO() {
+        this.personI.setEmail("  ");
+
+        Method method = this.service.getClass().getDeclaredMethod("validatePersonData", PersonDTO.class);
+        method.setAccessible(true);
+
+        InvocationTargetException exception = assertThrows(InvocationTargetException.class, () -> method.invoke(this.service, this.personI));
+
+        assertInstanceOf(PersonConstraintsException.class, exception.getTargetException());
+        assertEquals(PersonConstraintsException.ERROR.errorMessage(EMAIL_MISSING_ERROR_MESSAGE), exception.getTargetException().getMessage());
+    }
+
+    @Test
+    @SneakyThrows
+    void whenValidateReceivePersonDTOWithNullEmailThenReturnPersonDTO() {
+        this.personI.setEmail(null);
+
+        Method method = this.service.getClass().getDeclaredMethod("validatePersonData", PersonDTO.class);
+        method.setAccessible(true);
+
+        InvocationTargetException exception = assertThrows(InvocationTargetException.class, () -> method.invoke(this.service, this.personI));
+
+        assertInstanceOf(PersonConstraintsException.class, exception.getTargetException());
+        assertEquals(PersonConstraintsException.ERROR.errorMessage(EMAIL_MISSING_ERROR_MESSAGE), exception.getTargetException().getMessage());
     }
 
 }

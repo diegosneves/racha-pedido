@@ -1,7 +1,7 @@
 package diegosneves.github.rachapedido.service;
 
 import diegosneves.github.rachapedido.dto.PersonDTO;
-import diegosneves.github.rachapedido.exceptions.NullBuyerException;
+import diegosneves.github.rachapedido.exceptions.PersonConstraintsException;
 import diegosneves.github.rachapedido.mapper.BuilderMapper;
 import diegosneves.github.rachapedido.mapper.BuyerPersonMapper;
 import diegosneves.github.rachapedido.model.Person;
@@ -23,12 +23,14 @@ import static java.util.Objects.nonNull;
 @Service
 public class PersonService implements PersonServiceContract {
 
-    private static final String BUYER_ERROR = PersonDTO.class.getSimpleName();
+    private static final String BUYER_ERROR = "É necessário fornecer informações válidas para o comprador.";
+    private static final String MISSING_NAME_ERROR_MESSAGE = "O nome é um campo obrigatório. Por favor, insira um nome.";
+    private static final String EMAIL_MISSING_ERROR_MESSAGE = "O email é um campo obrigatório. Por favor, insira um email.";
 
     @Override
-    public List<Person> getConsumers(PersonDTO buyer, List<PersonDTO> consumers) throws NullBuyerException {
+    public List<Person> getConsumers(PersonDTO buyer, List<PersonDTO> consumers) throws PersonConstraintsException {
         if (isNull(buyer)) {
-            throw new NullBuyerException(BUYER_ERROR);
+            throw new PersonConstraintsException(BUYER_ERROR);
         }
         List<Person> personList = new ArrayList<>();
         personList.add(this.convertBuyerToPerson(buyer));
@@ -37,6 +39,23 @@ public class PersonService implements PersonServiceContract {
         }
 
         return personList;
+    }
+
+    /**
+     * Valida os dados de uma {@link PersonDTO pessoa}.
+     *
+     * @param personDTO Os dados da pessoa a serem validados.
+     * @return Os dados validados da pessoa.
+     * @throws PersonConstraintsException se o nome ou e-mail da pessoa estiverem faltando.
+     */
+    private PersonDTO validatePersonData(PersonDTO personDTO) throws PersonConstraintsException {
+        if (isNull(personDTO.getPersonName()) || personDTO.getPersonName().isBlank()) {
+            throw new PersonConstraintsException(MISSING_NAME_ERROR_MESSAGE);
+        } else if (isNull(personDTO.getEmail()) || personDTO.getEmail().isBlank()) {
+            throw new PersonConstraintsException(EMAIL_MISSING_ERROR_MESSAGE);
+        } else {
+            return personDTO;
+        }
     }
 
     /**
@@ -56,7 +75,7 @@ public class PersonService implements PersonServiceContract {
      * @return O objeto {@link Person} convertido.
      */
     private Person convertToPerson(PersonDTO consumer) {
-        return BuilderMapper.builderMapper(Person.class, consumer);
+        return BuilderMapper.builderMapper(Person.class, this.validatePersonData(consumer));
     }
 
     /**
@@ -67,6 +86,6 @@ public class PersonService implements PersonServiceContract {
      */
     private Person convertBuyerToPerson(PersonDTO buyer) {
         BuyerPersonMapper mapper = new BuyerPersonMapper();
-        return BuilderMapper.builderMapper(Person.class, buyer, mapper);
+        return BuilderMapper.builderMapper(Person.class, this.validatePersonData(buyer), mapper);
     }
 }

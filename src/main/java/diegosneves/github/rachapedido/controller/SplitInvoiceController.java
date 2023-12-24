@@ -28,7 +28,7 @@ public class SplitInvoiceController implements SplitInvoiceControllerContract {
 
     @Override
     public ResponseEntity<SplitInvoiceResponse> splitInvoice(SplitInvoiceRequest request) {
-        SplitInvoiceResponse response = this.service.splitInvoice(request); // TODO - Criar a regra de negocio
+        SplitInvoiceResponse response = this.service.splitInvoice(request);
         return ResponseEntity.ok(response);
     }
 }

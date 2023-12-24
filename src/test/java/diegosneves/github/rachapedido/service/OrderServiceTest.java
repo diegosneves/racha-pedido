@@ -29,8 +29,6 @@ class OrderServiceTest {
     private Person personI;
     private Person personII;
     private Item itemI;
-    private Item itemII;
-    private Item itemIII;
 
     @BeforeEach
     void setUp() {
@@ -39,12 +37,12 @@ class OrderServiceTest {
                 .price(40.0)
                 .build();
 
-        this.itemII = Item.builder()
+        Item itemII = Item.builder()
                 .name("Item II")
                 .price(2.0)
                 .build();
 
-        this.itemIII = Item.builder()
+        Item itemIII = Item.builder()
                 .name("Item III")
                 .price(8.0)
                 .build();
@@ -53,13 +51,13 @@ class OrderServiceTest {
                 .personName("Buyer - Person I")
                 .isBuyer(Boolean.TRUE)
                 .email("buyer@teste.com")
-                .items(List.of(this.itemI, this.itemII))
+                .items(List.of(this.itemI, itemII))
                 .build();
 
         this.personII = Person.builder()
                 .personName("Consumer - Person II")
                 .email("consumer@teste.com")
-                .items(List.of(this.itemIII))
+                .items(List.of(itemIII))
                 .build();
     }
 
