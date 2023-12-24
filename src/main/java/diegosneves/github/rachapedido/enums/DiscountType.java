@@ -23,7 +23,7 @@ public enum DiscountType {
     }
 
     public Double discountAmount(Double value) {
-        return this.calculation == 0.0 ? 0.0 : value / this.calculation;
+        return this.calculation == 0.0 ? this.calculation : value / this.calculation;
     }
 
 }

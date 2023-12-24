@@ -25,7 +25,35 @@ lanches ou refeições solicitados por meio de aplicativos de entrega como iFood
 
 [//]: # ( TODO Inserir os dados do docker-compose aqui...)
 ```yaml
-Docker-compose em construção...
+version: '3.9'
+
+services:
+  email_server:
+    image: diegoneves/email-server:latest
+    restart: always
+    container_name: email_server
+    networks:
+      - pedido-bridge
+    ports:
+      - "8081:8081"
+
+  racha-pedido-app:
+    image: diegoneves/racha-pedido:latest
+    container_name: racha-pedido
+    ports:
+      - "8080:8080"
+    depends_on:
+      - email_server
+    networks:
+      - pedido-bridge
+    environment:
+      - EMAIL_HOST=email_server
+      - EMAIL_PORT=8081
+
+
+networks:
+  pedido-bridge:
+    driver: bridge
 ```
 
 Lembre-se de estar no diretório onde o seu arquivo `docker-compose.yaml` está localizado antes de executar esses comandos.

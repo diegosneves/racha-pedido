@@ -1,17 +1,13 @@
 package diegosneves.github.rachapedido.service;
 
-import diegosneves.github.rachapedido.core.CashDiscountStrategy;
-import diegosneves.github.rachapedido.core.DiscountStrategy;
-import diegosneves.github.rachapedido.core.NoDiscountStrategy;
-import diegosneves.github.rachapedido.core.PercentageDiscountStrategy;
+import diegosneves.github.rachapedido.core.*;
 import diegosneves.github.rachapedido.dto.InvoiceDTO;
 import diegosneves.github.rachapedido.enums.DiscountType;
 import diegosneves.github.rachapedido.exceptions.CalculateInvoiceException;
 import diegosneves.github.rachapedido.mapper.BuilderMapper;
-import diegosneves.github.rachapedido.model.BillSplit;
-import diegosneves.github.rachapedido.model.Invoice;
-import diegosneves.github.rachapedido.model.Order;
-import diegosneves.github.rachapedido.model.Person;
+import diegosneves.github.rachapedido.mapper.NotificationEmailMapper;
+import diegosneves.github.rachapedido.model.*;
+import diegosneves.github.rachapedido.service.contract.EmailServiceContract;
 import diegosneves.github.rachapedido.service.contract.InvoiceServiceContract;
 import diegosneves.github.rachapedido.service.contract.OrderServiceContract;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,18 +23,38 @@ public class InvoiceService implements InvoiceServiceContract {
     private static final String CALCULATION_ERROR_MESSAGE = "Houve um problema ao calcular o valor total do pedido.";
     private static final String NULL_PARAMETER_ERROR_MESSAGE = "Um dos parâmetros necessários para a operação de cálculo da fatura está ausente ou nulo.";
     private final OrderServiceContract orderService;
+    private final EmailServiceContract emailService;
 
     @Autowired
-    public InvoiceService(OrderServiceContract orderService) {
+    public InvoiceService(OrderServiceContract orderService, EmailServiceContract emailService) {
         this.orderService = orderService;
+        this.emailService = emailService;
     }
 
     @Override
-    public BillSplit generateInvoice(List<Person> consumers, DiscountType discountType, Double discount, Double deliveryFee) {
+    public BillSplit generateInvoice(List<Person> consumers, DiscountType discountType, Double discount, Double deliveryFee, BankAccount selectedBank) {
         this.validateParameters(consumers, discountType, discount, deliveryFee);
         List<Order> closeOrder = this.orderService.closeOrder(consumers);
-        List<Invoice> invoices = this.calculateDiscount(closeOrder, discountType, discount, deliveryFee);
-        return new BillSplit();
+        List<NotificationEmail> notificationEmails = this.preparateSendingEmailNotification(consumers, selectedBank);
+        List<Invoice> unpaidInvoices = this.calculateDiscount(closeOrder, discountType, discount, deliveryFee);
+        return this.statementForPayment(unpaidInvoices, selectedBank, notificationEmails);
+    }
+
+    private List<NotificationEmail> preparateSendingEmailNotification(List<Person> consumers, BankAccount selectedBank) {
+        NotificationEmailMapper mapper = new NotificationEmailMapper();
+        List<NotificationEmail> notificationEmailList = consumers.stream().map(person -> BuilderMapper.builderMapper(NotificationEmail.class, person, mapper)).toList();
+        notificationEmailList.forEach(notificationEmail -> notificationEmail.setLink(selectedBank.paymentLink()));
+        return notificationEmailList; //TODO - Falta Teste para esse metodo
+    }
+
+    private BillSplit statementForPayment(List<Invoice> unpaidInvoices, BankAccount selectedBank, List<NotificationEmail> notificationEmails) {
+        unpaidInvoices.forEach(invoice -> invoice.setPaymentLink(selectedBank.paymentLink()));
+        notificationEmails.forEach(this.emailService::sendPaymentEmail);
+        Double total = unpaidInvoices.stream().mapToDouble(Invoice::getTotalPayable).sum();
+        return BillSplit.builder()
+                .invoices(unpaidInvoices)
+                .totalPayable(total)
+                .build();
     }
 
     private void validateParameters(List<Person> consumers, DiscountType discountType, Double discount, Double deliveryFee) throws CalculateInvoiceException {
