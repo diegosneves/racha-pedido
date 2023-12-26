@@ -45,7 +45,7 @@ public class OpenApiConfig {
      *   <li><b>Detalhes de Contato:</b> contendo email, url do repositório e o nome do autor.
      *      <ul>
      *        <li>Email: "neves.diegoalex@outlook.com"</li>
-     *        <li>URL: "https://github.com/diegosneves/racha-pedido"</li>
+     *        <li>URL: "<a href="https://github.com/diegosneves/racha-pedido">...</a>"</li>
      *        <li>Nome: "Diego Neves"</li>
      *      </ul>
      *   </li>

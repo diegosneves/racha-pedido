@@ -28,7 +28,7 @@ import org.springframework.web.client.RestClientException;
  * <p>
  * Observação: Substitua {@code url} e {@code notificationEmail} com os valores adequados de acordo com o seu caso de uso.
  *
- * @autor diegosneves
+ * @author diegosneves
  * @see HttpAdapter
  * @see NotificationEmail
  * @see ErroHandler

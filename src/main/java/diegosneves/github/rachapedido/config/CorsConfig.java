@@ -16,7 +16,7 @@ public class CorsConfig {
 
     /**
      * Configura e retorna um {@link CorsFilter}.
-     *
+     * <p>
      * Este filtro permite solicitações de qualquer origem (*),
      * aceita qualquer cabeçalho (*) e permite qualquer método HTTP (*), como GET, POST, etc.
      *
