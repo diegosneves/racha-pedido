@@ -2,6 +2,11 @@ package diegosneves.github.rachapedido.model;
 
 import lombok.*;
 
+/**
+ * Representa um Item.
+ *
+ * @author diegosneves
+ */
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter

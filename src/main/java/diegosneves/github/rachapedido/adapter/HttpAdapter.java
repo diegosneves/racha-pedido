@@ -9,6 +9,12 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+/**
+ * A classe {@link HttpAdapter} é uma classe base abstrata que fornece uma implementação comum
+ * para fazer requisições HTTP usando RestTemplateSimpleWebClient e HttpHeaders.
+ *
+ * @author diegosneves
+ */
 @Component
 @Getter(AccessLevel.PROTECTED)
 @Setter(AccessLevel.PROTECTED)

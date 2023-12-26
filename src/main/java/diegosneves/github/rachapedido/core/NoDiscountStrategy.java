@@ -1,20 +1,33 @@
 package diegosneves.github.rachapedido.core;
 
-import diegosneves.github.rachapedido.dto.InvoiceDTO;
 import diegosneves.github.rachapedido.enums.DiscountType;
 import diegosneves.github.rachapedido.mapper.BuilderMapper;
+import diegosneves.github.rachapedido.mapper.InvoiceFromPersonMapper;
 import diegosneves.github.rachapedido.model.Invoice;
+import diegosneves.github.rachapedido.model.Item;
+import diegosneves.github.rachapedido.model.Person;
 import diegosneves.github.rachapedido.utils.RoundUtil;
 
+/**
+ * Classe que implementa a estratégia de não aplicar desconto.
+ * Herda da classe base {@link DiscountStrategy}.<br>
+ * Este método realiza o cálculo de desconto baseado em uma estratégia onde {@link DiscountType#NO_DISCOUNT nenhum desconto} é aplicado.
+ * <br>
+ * @author diegosneves
+ */
 public class NoDiscountStrategy extends DiscountStrategy {
 
     @Override
-    public Invoice calculateDiscount(InvoiceDTO dto, Double discountAmount, DiscountType type, Double total, Double deliveryFee) {
+    public Invoice calculateDiscount(Person person, Double discountAmount, DiscountType type, Double total, Double deliveryFee) {
         if (DiscountType.NO_DISCOUNT.name().equals(type.name())) {
-            dto.setPercentageConsumedTotalBill(dto.getValueConsumed() / total);
-            dto.setTotalPayable(RoundUtil.round((total - type.discountAmount(discountAmount) + deliveryFee) * dto.getPercentageConsumedTotalBill()));
-            return BuilderMapper.builderMapper(Invoice.class, dto);
+            Double consumption = person.getItems().stream().mapToDouble(Item::getPrice).sum();
+            Double percentageConsumedTotalBill = consumption / total;
+            InvoiceFromPersonMapper mapper = new InvoiceFromPersonMapper();
+            Invoice newInvoice = BuilderMapper.builderMapper(Invoice.class, person, mapper);
+            newInvoice.setPercentageConsumedTotalBill(percentageConsumedTotalBill);
+            newInvoice.setTotalPayable(RoundUtil.round((total - type.discountAmount(discountAmount) + deliveryFee) * percentageConsumedTotalBill));
+            return newInvoice;
         }
-        return this.checkNext(dto, discountAmount, type, total, deliveryFee);
+        return this.checkNext(person, discountAmount, type, total, deliveryFee);
     }
 }

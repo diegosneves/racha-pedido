@@ -1,6 +1,7 @@
 package diegosneves.github.rachapedido.service;
 
 import diegosneves.github.rachapedido.core.BankAccount;
+import diegosneves.github.rachapedido.dto.InvoiceDTO;
 import diegosneves.github.rachapedido.dto.PersonDTO;
 import diegosneves.github.rachapedido.enums.DiscountType;
 import diegosneves.github.rachapedido.model.*;
@@ -34,7 +35,7 @@ class SplitInvoiceServiceTest {
     private PersonServiceContract personService;
 
     private SplitInvoiceRequest request;
-    private Item item;
+//    private Item item;
     private PersonDTO buyer;
     private PersonDTO friend;
 
@@ -79,19 +80,15 @@ class SplitInvoiceServiceTest {
                 .items(List.of(new Item("Sanduíche", 8.0)))
                 .build();
 
-        Invoice invoiceI = Invoice.builder()
+        InvoiceDTO invoiceI = InvoiceDTO.builder()
                 .consumerName("Fulano")
-                .valueConsumed(42.0)
                 .totalPayable(31.92)
-                .percentageConsumedTotalBill(84.0)
                 .paymentLink("n/a")
                 .build();
 
-        Invoice invoiceII = Invoice.builder()
+        InvoiceDTO invoiceII = InvoiceDTO.builder()
                 .consumerName("Amigo")
-                .valueConsumed(8.0)
                 .totalPayable(6.08)
-                .percentageConsumedTotalBill(16.0)
                 .paymentLink("link")
                 .build();
 
@@ -113,18 +110,14 @@ class SplitInvoiceServiceTest {
         verify(invoiceService, times(1)).generateInvoice(eq(List.of(consumerI, consumerII)), eq(DiscountType.CASH), eq(20.0), eq(8.0), eq(BankAccount.NUBANK));
 
         assertNotNull(response);
-        Invoice buyerInvoice = response.getInvoices().stream().filter(p -> p.getConsumerName().equals(this.buyer.getPersonName())).findFirst().orElse(null);
-        Invoice friendInvoice = response.getInvoices().stream().filter(p -> p.getConsumerName().equals(this.friend.getPersonName())).findFirst().orElse(null);
+        InvoiceDTO buyerInvoice = response.getInvoices().stream().filter(p -> p.getConsumerName().equals(this.buyer.getPersonName())).findFirst().orElse(null);
+        InvoiceDTO friendInvoice = response.getInvoices().stream().filter(p -> p.getConsumerName().equals(this.friend.getPersonName())).findFirst().orElse(null);
         assertNotNull(buyerInvoice);
         assertNotNull(friendInvoice);
         assertEquals(2, response.getInvoices().size());
-        assertEquals(42.0,buyerInvoice.getValueConsumed());
         assertEquals(31.92,buyerInvoice.getTotalPayable());
-        assertEquals(84.0, buyerInvoice.getPercentageConsumedTotalBill());
         assertEquals("n/a", buyerInvoice.getPaymentLink());
-        assertEquals(8.0, friendInvoice.getValueConsumed());
         assertEquals(6.08, friendInvoice.getTotalPayable());
-        assertEquals(16.0, friendInvoice.getPercentageConsumedTotalBill());
         assertEquals("link", friendInvoice.getPaymentLink());
         assertEquals(38.0, response.getTotalPayable());
     }

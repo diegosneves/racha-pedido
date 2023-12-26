@@ -7,9 +7,10 @@ import java.util.List;
 
 /**
  * A classe {@link Person} é responsável por representar a abstração de uma pessoa.
- * Cada instância dessa classe contém infomações como o nome e o email da pessoa.
  * Além disso, possui um atributo do tipo {@link Boolean} que indica se a pessoa é uma compradora.
  * Por fim, ela contém também uma lista de {@link Item} que representa os itens associados à pessoa.
+ *
+ * @author diegosneves
  */
 @NoArgsConstructor
 @AllArgsConstructor

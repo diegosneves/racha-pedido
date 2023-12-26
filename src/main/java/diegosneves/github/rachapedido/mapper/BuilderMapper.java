@@ -7,6 +7,8 @@ import java.lang.reflect.Field;
 
 /**
  * A interface BuilderMapper fornece métodos para simplificar o processo de mapeamento entre objetos.
+ *
+ * @author diegosneves
  */
 public interface BuilderMapper {
 

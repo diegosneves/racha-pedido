@@ -14,6 +14,11 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * A classe {@link SplitInvoiceService} é responsável por dividir uma fatura com base na solicitação fornecida.
+ *
+ * @author diegosneves
+ */
 @Service
 public class SplitInvoiceService implements SplitInvoiceServiceContract {
 

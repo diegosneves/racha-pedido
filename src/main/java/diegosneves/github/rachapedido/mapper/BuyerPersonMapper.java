@@ -6,7 +6,9 @@ import diegosneves.github.rachapedido.model.Person;
 /**
  * A classe {@link BuyerPersonMapper} implementa a interface {@link BuildingStrategy} e é responsável por criar
  * um novo objeto {@link Person} baseado no objeto {@link PersonDTO} fornecido usando o construtor
- * padrão.
+ * padrão.<br>
+ *
+ * @author diegosneves
  */
 public class BuyerPersonMapper implements BuildingStrategy<Person, PersonDTO> {
 
