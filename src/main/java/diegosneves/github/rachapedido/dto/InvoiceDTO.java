@@ -1,6 +1,10 @@
 package diegosneves.github.rachapedido.dto;
 
+import diegosneves.github.rachapedido.model.Item;
 import lombok.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A classe {@link InvoiceDTO} representa um objeto de transferência de dados de fatura (DTO).
@@ -33,8 +37,8 @@ import lombok.*;
 public class InvoiceDTO {
 
     private String consumerName;
-    private Double valueConsumed;
+    private List<Item> items = new ArrayList<>();
     private Double totalPayable;
-    private Double percentageConsumedTotalBill;
+    private String paymentLink;
 
 }

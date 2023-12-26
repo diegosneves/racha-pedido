@@ -14,6 +14,7 @@ public class NotificationEmail {
     private String consumerName;
     private Double total;
     private List<Item> itens;
+    private String bank;
     private String link;
 
 }

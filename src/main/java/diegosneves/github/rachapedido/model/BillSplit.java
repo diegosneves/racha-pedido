@@ -1,5 +1,6 @@
 package diegosneves.github.rachapedido.model;
 
+import diegosneves.github.rachapedido.dto.InvoiceDTO;
 import lombok.*;
 
 import java.util.ArrayList;
@@ -12,7 +13,7 @@ import java.util.List;
 @Builder
 public class BillSplit {
 
-    private List<Invoice> invoices = new ArrayList<>();
+    private List<InvoiceDTO> invoices = new ArrayList<>();
     private Double totalPayable;
 
 }

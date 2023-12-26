@@ -24,12 +24,6 @@ public class ControllerExceptionHandler {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(dto);
     }
 
-    @ExceptionHandler(CloseOrderException.class)
-    public ResponseEntity<ExceptionDTO> orderRelatedFaileures(CloseOrderException exception) {
-        ExceptionDTO dto = new ExceptionDTO(exception.getMessage(), CloseOrderException.ERROR.getStatusCodeValue());
-        return ResponseEntity.status(CloseOrderException.ERROR.getHttpStatusCode()).body(dto);
-    }
-
     @ExceptionHandler(CalculateInvoiceException.class)
     public ResponseEntity<ExceptionDTO> orderRelatedFaileures(CalculateInvoiceException exception) {
         ExceptionDTO dto = new ExceptionDTO(exception.getMessage(), CalculateInvoiceException.ERROR.getStatusCodeValue());
