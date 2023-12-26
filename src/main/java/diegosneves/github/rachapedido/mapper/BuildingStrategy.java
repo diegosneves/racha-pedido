@@ -3,6 +3,8 @@ package diegosneves.github.rachapedido.mapper;
 /**
  * A interface {@link BuildingStrategy} define uma estratégia para executar operações de mapeamento de objetos.
  *
+ * @author diegosneves
+ *
  * @param <T> o tipo da classe de destino
  * @param <E> o tipo do objeto de origem
  */

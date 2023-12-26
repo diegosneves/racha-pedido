@@ -1,7 +1,7 @@
 package diegosneves.github.rachapedido.exceptions;
 
 /**
- * A classe {@link PersonConstraintsException} representa uma exceção lançada quando um objeto comprador é nulo.
+ * A classe {@link PersonConstraintsException} representa uma exceção lançada quando um erro ocorre durante a validação de uma {@link diegosneves.github.rachapedido.model.Person pessoa}.
  *
  * @see RuntimeException
  * @author diegosneves

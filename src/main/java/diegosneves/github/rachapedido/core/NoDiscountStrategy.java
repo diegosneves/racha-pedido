@@ -8,6 +8,13 @@ import diegosneves.github.rachapedido.model.Item;
 import diegosneves.github.rachapedido.model.Person;
 import diegosneves.github.rachapedido.utils.RoundUtil;
 
+/**
+ * Classe que implementa a estratégia de não aplicar desconto.
+ * Herda da classe base {@link DiscountStrategy}.<br>
+ * Este método realiza o cálculo de desconto baseado em uma estratégia onde {@link DiscountType#NO_DISCOUNT nenhum desconto} é aplicado.
+ * <br>
+ * @author diegosneves
+ */
 public class NoDiscountStrategy extends DiscountStrategy {
 
     @Override

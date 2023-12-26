@@ -33,7 +33,7 @@ jobs:
 
       - name: Run Tests
         run: mvn test
-#TODO Descomentar essa linha apos as variaveis serem inseridas no Github e o dockerfile estar pronto...
+
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
 

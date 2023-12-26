@@ -8,6 +8,12 @@ import diegosneves.github.rachapedido.model.Item;
 import diegosneves.github.rachapedido.model.Person;
 import diegosneves.github.rachapedido.utils.RoundUtil;
 
+/**
+ * Classe de estratégia de desconto que aplica um desconto {@link DiscountType#PERCENTAGE percentual} no total da fatura.
+ * Estende a classe {@link DiscountStrategy}.<br>
+ * Método para calcular o desconto para uma pessoa baseado em um valor de desconto (%), tipo de desconto e o total da fatura.<br>
+ * @author diegosneves
+ */
 public class PercentageDiscountStrategy extends DiscountStrategy {
 
     @Override

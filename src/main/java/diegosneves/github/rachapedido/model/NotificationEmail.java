@@ -4,6 +4,12 @@ import lombok.*;
 
 import java.util.List;
 
+/**
+ * Classe modelo para Notificação de Email.
+ * Esta classe contém informações necessárias para compor um email de notificação.
+ *
+ * @author diegosneves
+ */
 @NoArgsConstructor
 @AllArgsConstructor
 @Data

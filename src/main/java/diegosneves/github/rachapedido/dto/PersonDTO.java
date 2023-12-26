@@ -12,6 +12,7 @@ import java.util.List;
  * Esta classe é usada principalmente para transferência de dados entre processos ou componentes e ajuda a evitar múltiplas chamadas ao projeto atual.
  *
  * @see diegosneves.github.rachapedido.model.Person Person
+ * @author diegosneves
  */
 @NoArgsConstructor
 @AllArgsConstructor

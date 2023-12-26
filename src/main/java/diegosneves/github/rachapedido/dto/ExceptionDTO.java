@@ -5,6 +5,7 @@ package diegosneves.github.rachapedido.dto;
  * Contém a mensagem de exceção e o código de status.
  *
  * @see java.lang.Record
+ * @author diegosneves
  */
 public record ExceptionDTO(String message, int statusCode) {
 }
