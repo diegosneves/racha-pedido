@@ -9,7 +9,6 @@ import diegosneves.github.rachapedido.mapper.NotificationEmailMapper;
 import diegosneves.github.rachapedido.model.*;
 import diegosneves.github.rachapedido.service.contract.EmailServiceContract;
 import diegosneves.github.rachapedido.service.contract.InvoiceServiceContract;
-import diegosneves.github.rachapedido.service.contract.OrderServiceContract;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,37 +21,43 @@ public class InvoiceService implements InvoiceServiceContract {
 
     private static final String CALCULATION_ERROR_MESSAGE = "Houve um problema ao calcular o valor total do pedido.";
     private static final String NULL_PARAMETER_ERROR_MESSAGE = "Um dos parâmetros necessários para a operação de cálculo da fatura está ausente ou nulo.";
-    private final OrderServiceContract orderService;
+    public static final String VOID = "";
     private final EmailServiceContract emailService;
 
     @Autowired
-    public InvoiceService(OrderServiceContract orderService, EmailServiceContract emailService) {
-        this.orderService = orderService;
+    public InvoiceService(EmailServiceContract emailService) {
         this.emailService = emailService;
     }
 
     @Override
     public BillSplit generateInvoice(List<Person> consumers, DiscountType discountType, Double discount, Double deliveryFee, BankAccount selectedBank) {
         this.validateParameters(consumers, discountType, discount, deliveryFee);
-        List<Order> closeOrder = this.orderService.closeOrder(consumers);
-        List<NotificationEmail> notificationEmails = this.preparateSendingEmailNotification(consumers, selectedBank);
-        List<Invoice> unpaidInvoices = this.calculateDiscount(closeOrder, discountType, discount, deliveryFee);
+        List<Invoice> unpaidInvoices = this.calculateDiscount(consumers, discountType, discount, deliveryFee);
+        List<NotificationEmail> notificationEmails = this.preparateSendingEmailNotification(unpaidInvoices, selectedBank);
         return this.statementForPayment(unpaidInvoices, selectedBank, notificationEmails);
     }
 
-    private List<NotificationEmail> preparateSendingEmailNotification(List<Person> consumers, BankAccount selectedBank) {
+    private List<NotificationEmail> preparateSendingEmailNotification(List<Invoice> invoices, BankAccount selectedBank) {
         NotificationEmailMapper mapper = new NotificationEmailMapper();
-        List<NotificationEmail> notificationEmailList = consumers.stream().map(person -> BuilderMapper.builderMapper(NotificationEmail.class, person, mapper)).toList();
-        notificationEmailList.forEach(notificationEmail -> notificationEmail.setLink(selectedBank.paymentLink()));
+        List<NotificationEmail> notificationEmailList = invoices.stream().filter(invoice -> invoice.getIsBuyer() == Boolean.FALSE).map(invoice -> BuilderMapper.builderMapper(NotificationEmail.class, invoice, mapper)).toList();
+        notificationEmailList.forEach(notificationEmail -> notificationEmail.setLink(selectedBank.paymentLink(notificationEmail.getTotal())));
+        notificationEmailList.forEach(notificationEmail -> notificationEmail.setBank(selectedBank.toString()));
         return notificationEmailList; //TODO - Falta Teste para esse metodo
     }
 
     private BillSplit statementForPayment(List<Invoice> unpaidInvoices, BankAccount selectedBank, List<NotificationEmail> notificationEmails) {
-        unpaidInvoices.forEach(invoice -> invoice.setPaymentLink(selectedBank.paymentLink()));
+        unpaidInvoices.forEach(invoice -> {
+            if (invoice.getIsBuyer() == Boolean.FALSE) {
+                invoice.setPaymentLink(selectedBank.paymentLink(invoice.getTotalPayable()));
+            } else {
+                invoice.setPaymentLink(VOID);
+            }
+        });
         notificationEmails.forEach(this.emailService::sendPaymentEmail);
         Double total = unpaidInvoices.stream().mapToDouble(Invoice::getTotalPayable).sum();
+        List<InvoiceDTO> invoiceDTOs = unpaidInvoices.stream().map(this::convertToInvoiceDTO).toList();
         return BillSplit.builder()
-                .invoices(unpaidInvoices)
+                .invoices(invoiceDTOs)
                 .totalPayable(total)
                 .build();
     }
@@ -63,29 +68,28 @@ public class InvoiceService implements InvoiceServiceContract {
         }
     }
 
-    private List<Invoice> calculateDiscount(List<Order> closeOrder, DiscountType discountType, Double discount, Double deliveryFee) throws CalculateInvoiceException {
-        List<InvoiceDTO> invoices = closeOrder.stream().map(this::convertToInvoiceDTO).toList();
+    private List<Invoice> calculateDiscount(List<Person> persons, DiscountType discountType, Double discount, Double deliveryFee) throws CalculateInvoiceException {
         double total;
         try {
-            total = invoices.stream().mapToDouble(InvoiceDTO::getValueConsumed).sum();
+            total = persons.stream().mapToDouble(p -> p.getItems().stream().mapToDouble(Item::getPrice).sum()).sum();
         } catch (Exception e) {
             throw new CalculateInvoiceException(CALCULATION_ERROR_MESSAGE, e);
         }
         Double finalTotal = total;
-        return invoices.stream().map(dto -> this.calcDiscountForInvoice(dto, discountType, discount, finalTotal, deliveryFee)).toList();
+        return persons.stream().map(dto -> this.calcDiscountForInvoice(dto, discountType, discount, finalTotal, deliveryFee)).toList();
     }
 
-    private Invoice calcDiscountForInvoice(InvoiceDTO dto, DiscountType discountType, Double discount, Double total, Double deliveryFee){
+    private Invoice calcDiscountForInvoice(Person person, DiscountType discountType, Double discount, Double total, Double deliveryFee) {
         DiscountStrategy strategy = DiscountStrategy.link(
                 new CashDiscountStrategy(),
                 new PercentageDiscountStrategy(),
                 new NoDiscountStrategy());
 
-        return strategy.calculateDiscount(dto,discount, discountType, total, deliveryFee);
+        return strategy.calculateDiscount(person, discount, discountType, total, deliveryFee);
     }
 
-    private InvoiceDTO convertToInvoiceDTO(Order order) {
-        return BuilderMapper.builderMapper(InvoiceDTO.class, order);
+    private InvoiceDTO convertToInvoiceDTO(Invoice invoice) {
+        return BuilderMapper.builderMapper(InvoiceDTO.class, invoice);
     }
 
 }

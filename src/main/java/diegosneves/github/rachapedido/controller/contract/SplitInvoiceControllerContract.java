@@ -20,8 +20,10 @@ public interface SplitInvoiceControllerContract {
 
     @PostMapping(value = "/invoice", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Receber os dados para realizar a divisão da fatura", tags = "Racha Pedido", parameters = {
-            @Parameter(name = "referencia", description = "Tipos de descontos que devem ser aplicado no `discountType` do body",
-                    schema = @Schema(enumAsRef = true, defaultValue = "cash", allowableValues = {"cash", "percentage", "no discount"}))
+            @Parameter(name = "descontos", description = "Tipos de descontos a serem aplicados no campo `discountType` do corpo da requisição",
+                    schema = @Schema(enumAsRef = true, defaultValue = "cash", allowableValues = {"cash", "percentage", "no discount"})),
+            @Parameter(name = "bancos", description = "Tipos de bancos aceitos que devem ser preenchidos no campo `selectedBank` do corpo da requisição",
+                    schema = @Schema(enumAsRef = true, defaultValue = "nubank", allowableValues = {"nubank", "picpay"}))
     })
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Divisão da Fatura realizada com sucesso", content = @Content)

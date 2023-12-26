@@ -1,8 +1,8 @@
 package diegosneves.github.rachapedido.core;
 
-import diegosneves.github.rachapedido.dto.InvoiceDTO;
 import diegosneves.github.rachapedido.enums.DiscountType;
 import diegosneves.github.rachapedido.model.Invoice;
+import diegosneves.github.rachapedido.model.Person;
 
 public abstract class DiscountStrategy {
 
@@ -16,13 +16,13 @@ public abstract class DiscountStrategy {
         }
         return first;
     }
-    public abstract Invoice calculateDiscount(InvoiceDTO dto, Double discountAmount, DiscountType type, Double total, Double deliveryFee);
+    public abstract Invoice calculateDiscount(Person person, Double discountAmount, DiscountType type, Double total, Double deliveryFee);
 
-    protected Invoice checkNext(InvoiceDTO dto, Double discountAmount, DiscountType type, Double total, Double deliveryFee) {
+    protected Invoice checkNext(Person person, Double discountAmount, DiscountType type, Double total, Double deliveryFee) {
         if (this.next == null) {
             return new Invoice();
         }
-        return next.calculateDiscount(dto, discountAmount, type, total, deliveryFee);
+        return next.calculateDiscount(person, discountAmount, type, total, deliveryFee);
     }
 
 }
