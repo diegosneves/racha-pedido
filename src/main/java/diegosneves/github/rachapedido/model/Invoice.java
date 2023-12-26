@@ -5,6 +5,11 @@ import lombok.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Classe que representa uma {@link Invoice Nota Fiscal}.
+ *
+ * @author diegosneves
+ */
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter

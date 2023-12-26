@@ -33,7 +33,7 @@ jobs:
 
       - name: Run Tests
         run: mvn test
-#TODO Descomentar essa linha apos as variaveis serem inseridas no Github e o dockerfile estar pronto...
+
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
 
@@ -53,13 +53,3 @@ jobs:
           push: true
           tags: diegoneves/racha-pedido:latest
 
-
-#      - name: Build and push
-#        id: docker_build
-#        uses: docker/build-push-action@v4
-#        with:
-#          push: true
-#          tags: diegoneves/racha-pedido:latest
-#          build-args: MY_ENV_VAR=${{ env.MY_ENV_VAR }}
-#        env:
-#          MY_ENV_VAR: my_value

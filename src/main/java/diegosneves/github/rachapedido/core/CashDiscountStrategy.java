@@ -8,6 +8,15 @@ import diegosneves.github.rachapedido.model.Item;
 import diegosneves.github.rachapedido.model.Person;
 import diegosneves.github.rachapedido.utils.RoundUtil;
 
+/**
+ * Classe que implementa a estratégia de desconto para pagamento em dinheiro.
+ * <p>
+ * Calcula o valor do desconto, caso o tipo seja {@link DiscountType#CASH "CASH"}.
+ * Este método também se responsabiliza por calcular a porcentagem de consumo do total
+ * da conta e definir o valor a ser pago na fatura.
+ *
+ * @author diegosneves
+ */
 public class CashDiscountStrategy extends DiscountStrategy {
 
     @Override
