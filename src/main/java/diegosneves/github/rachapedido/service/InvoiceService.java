@@ -84,7 +84,7 @@ public class InvoiceService implements InvoiceServiceContract {
                 invoice.setPaymentLink(VOID);
             }
         });
-        notificationEmails.forEach(this.emailService::sendPaymentEmail);
+        notificationEmails.forEach(this.emailService::sendEmail);
         Double total = unpaidInvoices.stream().mapToDouble(Invoice::getTotalPayable).sum();
         List<InvoiceDTO> invoiceDTOs = unpaidInvoices.stream().map(this::convertToInvoiceDTO).toList();
         return BillSplit.builder()
