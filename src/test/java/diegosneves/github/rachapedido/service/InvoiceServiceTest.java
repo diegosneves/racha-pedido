@@ -133,7 +133,7 @@ class InvoiceServiceTest {
 
         BillSplit actual = this.service.generateInvoice(List.of(this.consumerI, this.consumerII), DiscountType.CASH, 20.0, 8.0, BankAccount.NUBANK);
 
-        verify(this.emailService, times(1)).sendPaymentEmail(this.notificationEmailCaptor.capture());
+        verify(this.emailService, times(1)).sendEmail(this.notificationEmailCaptor.capture());
 
         assertNotNull(actual);
         assertEquals(2, actual.getInvoices().size());
@@ -355,7 +355,7 @@ class InvoiceServiceTest {
 
         BillSplit actual = (BillSplit) method.invoke(this.service, List.of(this.invoiceI, this.invoiceII), BankAccount.PICPAY, List.of(this.emailII));
 
-        verify(this.emailService, times(1)).sendPaymentEmail(this.notificationEmailCaptor.capture());
+        verify(this.emailService, times(1)).sendEmail(this.notificationEmailCaptor.capture());
 
         assertNotNull(actual);
         assertEquals(2, actual.getInvoices().size());
