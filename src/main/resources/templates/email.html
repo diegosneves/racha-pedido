@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Racha Pedido</title>
+</head>
+<body>
+<p>Olá, <span th:text="${consumerName}"/></p>
+<p>O valor final do seu pagamento, já com o desconto aplicado, é de:
+R$ <span th:text="${#numbers.formatDecimal(total, 1, 2)}"/> </p>
+<p>Itens para pagar:</p>
+<ul th:each="item : ${itens}">
+    <li>Nome do item: <span th:text="${item.name}"/> -
+
+R$ <span th:text="${#numbers.formatDecimal(item.price, 1, 2)}"/></li>
+</ul>
+<p>Para prosseguir com o pagamento, clique no link a seguir:</p>
+<a th:href="${link}" target="_blank">Faça o pagamento agora no - <span
+
+th:text="${bank}"/> </a>
+</body>
+</html>
