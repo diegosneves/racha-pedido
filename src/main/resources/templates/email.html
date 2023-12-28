@@ -7,7 +7,7 @@
 <body>
 <p>Olá, <span th:text="${consumerName}"/></p>
 <p>O valor final do seu pagamento, já com o desconto aplicado, é de:
-<span th:text="${#numbers.formatDecimal(total, 1, 2)}"/> </p>
+R$ <span th:text="${#numbers.formatDecimal(total, 1, 2)}"/> </p>
 <p>Itens para pagar:</p>
 <ul th:each="item : ${itens}">
     <li>Nome do item: <span th:text="${item.name}"/> -

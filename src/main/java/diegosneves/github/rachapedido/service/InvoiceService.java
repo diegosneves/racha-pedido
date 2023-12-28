@@ -33,7 +33,7 @@ public class InvoiceService implements InvoiceServiceContract {
 
     private static final String CALCULATION_ERROR_MESSAGE = "Houve um problema ao calcular o valor total do pedido.";
     private static final String NULL_PARAMETER_ERROR_MESSAGE = "Um dos parâmetros necessários para a operação de cálculo da fatura está ausente ou nulo.";
-    public static final String VOID = "";
+    private static final String VOID = "";
     private final EmailServiceContract emailService;
 
     @Autowired
@@ -84,7 +84,7 @@ public class InvoiceService implements InvoiceServiceContract {
                 invoice.setPaymentLink(VOID);
             }
         });
-        notificationEmails.forEach(this.emailService::sendEmail);
+        notificationEmails.forEach(this.emailService::sendPaymentEmail);
         Double total = unpaidInvoices.stream().mapToDouble(Invoice::getTotalPayable).sum();
         List<InvoiceDTO> invoiceDTOs = unpaidInvoices.stream().map(this::convertToInvoiceDTO).toList();
         return BillSplit.builder()
