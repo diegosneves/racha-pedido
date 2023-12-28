@@ -15,6 +15,7 @@ import java.lang.reflect.Field;
 public class ThymeLeafContextUtil {
 
     private static final Context context = new Context();
+    private static final String CONTEXT_GENERATION_ERROR = "Erro ao gerar contexto para o e-mail";
 
     private ThymeLeafContextUtil() {
     }
@@ -33,7 +34,7 @@ public class ThymeLeafContextUtil {
             try {
                 context.setVariable(field.getName(), field.get(data));
             } catch (IllegalAccessException e) {
-                log.error("Error generating context for email", e);
+                log.error(CONTEXT_GENERATION_ERROR, e);
             }
         }
         return context;
