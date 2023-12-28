@@ -50,7 +50,6 @@ class InvoiceServiceTest {
     private Item itemII;
     private Item itemIII;
 
-    private NotificationEmail emailI;
     private NotificationEmail emailII;
 
     @BeforeEach
@@ -105,14 +104,6 @@ class InvoiceServiceTest {
                 .paymentLink(PAYMENT_LINK)
                 .build();
 
-        this.emailI = NotificationEmail.builder()
-                .email(this.consumerI.getEmail())
-                .consumerName(this.consumerI.getPersonName())
-                .total(31.92)
-                .itens(List.of(itemI, itemII))
-                .bank(BankAccount.NUBANK.toString())
-                .link(PAYMENT_LINK)
-                .build();
 
         this.emailII = NotificationEmail.builder()
                 .email(this.consumerII.getEmail())
@@ -308,16 +299,6 @@ class InvoiceServiceTest {
 
     }
 
-    @Test
-    @SneakyThrows
-    void whenValidateParametersReceiveInvoiceDataOkThenDoNothing() {
-
-        Method method = this.service.getClass().getDeclaredMethod("validateParameters", List.class, DiscountType.class, Double.class, Double.class);
-        method.setAccessible(true);
-
-        method.invoke(this.service, List.of(this.consumerI, this.consumerII), DiscountType.CASH, 10.0, 8.0);
-
-    }
 
     @Test
     @SneakyThrows

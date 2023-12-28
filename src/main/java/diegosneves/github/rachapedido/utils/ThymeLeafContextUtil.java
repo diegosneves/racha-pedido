@@ -15,7 +15,6 @@ import java.lang.reflect.Field;
 public class ThymeLeafContextUtil {
 
     private static final Context context = new Context();
-    ;
 
     private ThymeLeafContextUtil() {
     }
