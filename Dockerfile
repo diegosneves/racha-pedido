@@ -1,6 +1,14 @@
 # Use a imagem oficial do OpenJDK 17 como a imagem base
 FROM openjdk:17-jdk-alpine
 
+# Define os argumentos
+ARG MAIL_USERNAME
+ARG MAIL_PASSWORD
+
+# Define as variáveis de ambiente
+ENV MAIL_USERNAME=$MAIL_USERNAME
+ENV MAIL_PASSWORD=$MAIL_PASSWORD
+
 # Define o diretório de trabalho no contêiner
 WORKDIR /app
 

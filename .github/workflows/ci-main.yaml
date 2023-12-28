@@ -14,6 +14,9 @@ jobs:
         ubuntu: ['ubuntu-latest']
         java: ['17']
     runs-on: ${{ matrix.ubuntu }}
+    env:
+      MAIL_USERNAME: ${{ secrets.MAIL_USERNAME }}
+      MAIL_PASSWORD: ${{ secrets.MAIL_PASSWORD }}
     steps:
       - name: Checkout codigo
         uses: actions/checkout@v3
@@ -52,4 +55,7 @@ jobs:
         with:
           push: true
           tags: diegoneves/racha-pedido:latest
+          build-args: |
+            MAIL_USERNAME=${{ env.MAIL_USERNAME }}
+            MAIL_PASSWORD=${{ env.MAIL_PASSWORD }}
 

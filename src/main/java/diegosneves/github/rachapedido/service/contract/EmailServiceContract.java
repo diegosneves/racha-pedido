@@ -16,4 +16,11 @@ public interface EmailServiceContract {
      */
     void sendPaymentEmail(NotificationEmail notificationEmail);
 
+    /**
+     * Envia um e-mail usando os dados fornecidos por {@link NotificationEmail}.
+     *
+     * @param data os dados de {@link NotificationEmail} usados para compor o e-mail.
+     */
+    void sendEmail(NotificationEmail data);
+
 }
