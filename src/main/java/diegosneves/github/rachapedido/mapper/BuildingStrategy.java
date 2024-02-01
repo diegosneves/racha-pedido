@@ -16,6 +16,6 @@ public interface BuildingStrategy<T, E> {
      * @param origem o objeto de origem que será convertido no objeto de destino
      * @return uma instância da classe de destino com seus campos preenchidos
      */
-    T run(E origem);
+    T mapper(E origem);
 
 }

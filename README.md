@@ -8,6 +8,7 @@
 ---
 [![Linkedin badge](https://img.shields.io/badge/-Linkedin-blue?flat-square&logo=Linkedin&logoColor=white&link=https://www.linkedin.com/in/diego-neves-224208177/)](https://www.linkedin.com/in/diego-neves-224208177/)
 [![CI Racha Pedido](https://github.com/diegosneves/racha-pedido/actions/workflows/ci-main.yaml/badge.svg)](https://github.com/diegosneves/racha-pedido/actions/workflows/ci-main.yaml)
+[![wakatime](https://wakatime.com/badge/user/018bea20-dbbc-48e2-b101-5415903acf5a/project/018c82f7-5a74-4411-851f-68e7b0bdc2a7.svg)](https://wakatime.com/badge/user/018bea20-dbbc-48e2-b101-5415903acf5a/project/018c82f7-5a74-4411-851f-68e7b0bdc2a7)
 
 O **Racha Pedido** é uma solução inteligente para resolver o desafio comum enfrentado por equipes de trabalho ao dividir
 lanches ou refeições solicitados por meio de aplicativos de entrega como iFood ou Uber Eats.
@@ -136,13 +137,11 @@ class BankAccount {
 <<enumeration>>
   - BankAccount(String, String) 
   +  NUBANK
-  - String bankName
   +  PICPAY
+  - String bankName
   - String billingLink
-  + valueOf(String) BankAccount
-  + paymentLink(Double) String
-  + values() BankAccount[]
   + toString() String
+  + paymentLink(Double) String
 }
 class BillSplit {
   + BillSplit(List~InvoiceDTO~, Double) 
@@ -157,8 +156,8 @@ class BillSplit {
 }
 class BuilderMapper {
 <<Interface>>
-  + builderMapper(Class~T~, E, BuildingStrategy~T, E~) T
   + builderMapper(Class~T~, Object) T
+  + builderMapper(Class~T~, E, BuildingStrategy~T, E~) T
 }
 class BuildingStrategy~T, E~ {
 <<Interface>>
@@ -183,11 +182,11 @@ class ConstructorDefaultUndefinedException {
 }
 class ControllerExceptionHandler {
   + ControllerExceptionHandler() 
-  + consumerRelatedFaileures(PersonConstraintsException) ResponseEntity~ExceptionDTO~
-  + mapperRelatedFaileures(ConstructorDefaultUndefinedException) ResponseEntity~ExceptionDTO~
-  + mapperRelatedFaileures(MapperFailureException) ResponseEntity~ExceptionDTO~
-  + orderRelatedFaileures(CalculateInvoiceException) ResponseEntity~ExceptionDTO~
   + generalError(Exception) ResponseEntity~ExceptionDTO~
+  + mapperRelatedFaileures(MapperFailureException) ResponseEntity~ExceptionDTO~
+  + mapperRelatedFaileures(ConstructorDefaultUndefinedException) ResponseEntity~ExceptionDTO~
+  + orderRelatedFaileures(CalculateInvoiceException) ResponseEntity~ExceptionDTO~
+  + consumerRelatedFaileures(PersonConstraintsException) ResponseEntity~ExceptionDTO~
 }
 class CorsConfig {
   + CorsConfig() 
@@ -196,53 +195,55 @@ class CorsConfig {
 class DiscountStrategy {
   + DiscountStrategy() 
   # DiscountStrategy next
-  # checkNext(Person, Double, DiscountType, Double, Double) Invoice
   + calculateDiscount(Person, Double, DiscountType, Double, Double) Invoice
+  # checkNext(Person, Double, DiscountType, Double, Double) Invoice
   + link(DiscountStrategy, DiscountStrategy[]) DiscountStrategy
 }
 class DiscountType {
 <<enumeration>>
   - DiscountType(Double) 
-  +  PERCENTAGE
   - Double calculation
+  +  PERCENTAGE
   +  CASH
   +  NO_DISCOUNT
-  + values() DiscountType[]
   + discountAmount(Double) Double
-  + valueOf(String) DiscountType
 }
 class EmailService {
-  + EmailService(SendEmailAdapter) 
+  + EmailService(SendEmailAdapter, JavaMailSender, SpringTemplateEngine) 
+  - JavaMailSender emailSender
+  - SpringTemplateEngine templateEngine
+  - String EMAIL_TEMPLATE
   - SendEmailAdapter sendEmailAdapter
+  - Logger log
   + sendPaymentEmail(NotificationEmail) void
+  + sendEmail(NotificationEmail) void
 }
 class EmailServiceContract {
 <<Interface>>
   + sendPaymentEmail(NotificationEmail) void
+  + sendEmail(NotificationEmail) void
 }
 class ErroHandler {
 <<enumeration>>
   - ErroHandler(String, HttpStatus) 
+  +  CONSTRUCTOR_DEFAULT_UNDEFINED
+  +  EMAIL_SEND_FAILURE
+  +  PERSON_CONSTRAINTS
   - String message
   +  CLASS_MAPPING_FAILURE
-  +  EMAIL_SEND_FAILURE
-  +  ORDER_FAILED
-  +  CONSTRUCTOR_DEFAULT_UNDEFINED
-  - HttpStatus httpStatus
-  +  PERSON_CONSTRAINTS
   +  INVOICE_FAILED
-  + valueOf(String) ErroHandler
-  + errorMessage(String) String
+  - HttpStatus httpStatus
+  +  ORDER_FAILED
   + getStatusCodeValue() int
+  + errorMessage(String) String
   + getHttpStatusCode() HttpStatus
-  + values() ErroHandler[]
 }
 class ExceptionDTO {
   + ExceptionDTO(String, int) 
-  - String message
   - int statusCode
-  + statusCode() int
+  - String message
   + message() String
+  + statusCode() int
 }
 class HttpAdapter {
   # HttpAdapter() 
@@ -254,41 +255,41 @@ class HttpAdapter {
   # setHeaders(HttpHeaders) void
 }
 class Invoice {
-  + Invoice(String, String, Boolean, List~Item~, Double, Double, String) 
   + Invoice() 
-  - Double totalPayable
-  - String email
+  + Invoice(String, String, Boolean, List~Item~, Double, Double, String) 
   - Boolean isBuyer
+  - String email
   - Double percentageConsumedTotalBill
-  - String consumerName
-  - List~Item~ items
+  - Double totalPayable
   - String paymentLink
-  + getTotalPayable() Double
-  + getConsumerName() String
-  + builder() InvoiceBuilder
-  + getEmail() String
-  + setIsBuyer(Boolean) void
+  - List~Item~ items
+  - String consumerName
   + setItems(List~Item~) void
-  + setTotalPayable(Double) void
+  + getConsumerName() String
+  + getEmail() String
   + getIsBuyer() Boolean
-  + getItems() List~Item~
-  + getPercentageConsumedTotalBill() Double
-  + getPaymentLink() String
-  + setConsumerName(String) void
-  + setEmail(String) void
   + setPercentageConsumedTotalBill(Double) void
+  + getItems() List~Item~
+  + getTotalPayable() Double
+  + getPercentageConsumedTotalBill() Double
   + setPaymentLink(String) void
+  + getPaymentLink() String
+  + setIsBuyer(Boolean) void
+  + setConsumerName(String) void
+  + setTotalPayable(Double) void
+  + builder() InvoiceBuilder
+  + setEmail(String) void
 }
 class InvoiceDTO {
   + InvoiceDTO(String, List~Item~, Double, String) 
   + InvoiceDTO() 
   - Double totalPayable
   - List~Item~ items
-  - String paymentLink
   - String consumerName
-  + getTotalPayable() Double
+  - String paymentLink
   + getConsumerName() String
   + getItems() List~Item~
+  + getTotalPayable() Double
   + getPaymentLink() String
   + setConsumerName(String) void
   + setItems(List~Item~) void
@@ -302,17 +303,17 @@ class InvoiceFromPersonMapper {
 }
 class InvoiceService {
   + InvoiceService(EmailServiceContract) 
-  - EmailServiceContract emailService
   - String CALCULATION_ERROR_MESSAGE
   - String NULL_PARAMETER_ERROR_MESSAGE
-  + String VOID
+  - String VOID
+  - EmailServiceContract emailService
   - preparateSendingEmailNotification(List~Invoice~, BankAccount) List~NotificationEmail~
-  - statementForPayment(List~Invoice~, BankAccount, List~NotificationEmail~) BillSplit
-  - calculateDiscount(List~Person~, DiscountType, Double, Double) List~Invoice~
-  + generateInvoice(List~Person~, DiscountType, Double, Double, BankAccount) BillSplit
   - calcDiscountForInvoice(Person, DiscountType, Double, Double, Double) Invoice
-  - validateParameters(List~Person~, DiscountType, Double, Double) void
   - convertToInvoiceDTO(Invoice) InvoiceDTO
+  - statementForPayment(List~Invoice~, BankAccount, List~NotificationEmail~) BillSplit
+  + generateInvoice(List~Person~, DiscountType, Double, Double, BankAccount) BillSplit
+  - validateParameters(List~Person~, DiscountType, Double, Double) void
+  - calculateDiscount(List~Person~, DiscountType, Double, Double) List~Invoice~
 }
 class InvoiceServiceContract {
 <<Interface>>
@@ -321,8 +322,8 @@ class InvoiceServiceContract {
 class Item {
   + Item(String, Double) 
   + Item() 
-  - String name
   - Double price
+  - String name
   + getName() String
   + getPrice() Double
   + setName(String) void
@@ -340,29 +341,29 @@ class NoDiscountStrategy {
 class NotificationEmail {
   + NotificationEmail(String, String, Double, List~Item~, String, String) 
   + NotificationEmail() 
+  - String email
   - Double total
-  - String link
+  - String bank
   - String consumerName
   - List~Item~ itens
-  - String bank
-  - String email
-  + getEmail() String
-  + getConsumerName() String
-  + setTotal(Double) void
-  # canEqual(Object) boolean
-  + getTotal() Double
+  - String link
   + getItens() List~Item~
-  + setLink(String) void
-  + equals(Object) boolean
-  + getBank() String
-  + builder() NotificationEmailBuilder
-  + getLink() String
-  + setEmail(String) void
+  + getEmail() String
   + setItens(List~Item~) void
+  + equals(Object) boolean
+  + builder() NotificationEmailBuilder
+  + toString() String
+  + setLink(String) void
+  + getConsumerName() String
+  + getTotal() Double
+  + getBank() String
   + setBank(String) void
+  + getLink() String
+  + setTotal(Double) void
+  + setEmail(String) void
+  # canEqual(Object) boolean
   + setConsumerName(String) void
   + hashCode() int
-  + toString() String
 }
 class NotificationEmailMapper {
   + NotificationEmailMapper() 
@@ -374,26 +375,6 @@ class OpenApiConfig {
   - getTags() List~Tag~
   - getInfo() Info
 }
-class Order {
-  + Order(String, String, Boolean, Double, List~Item~) 
-  + Order() 
-  - String email
-  - Boolean isBuyer
-  - List~Item~ items
-  - Double valueConsumed
-  - String consumerName
-  + getValueConsumed() Double
-  + getConsumerName() String
-  + getEmail() String
-  + getIsBuyer() Boolean
-  + getItems() List~Item~
-  + setConsumerName(String) void
-  + builder() OrderBuilder
-  + setItems(List~Item~) void
-  + setEmail(String) void
-  + setIsBuyer(Boolean) void
-  + setValueConsumed(Double) void
-}
 class PercentageDiscountStrategy {
   + PercentageDiscountStrategy() 
   + calculateDiscount(Person, Double, DiscountType, Double, Double) Invoice
@@ -401,15 +382,15 @@ class PercentageDiscountStrategy {
 class Person {
   + Person(String, String, Boolean, List~Item~) 
   + Person() 
-  - String email
   - List~Item~ items
-  - String personName
+  - String email
   - Boolean isBuyer
-  + setPersonName(String) void
+  - String personName
   + getPersonName() String
   + getEmail() String
   + getIsBuyer() Boolean
   + getItems() List~Item~
+  + setPersonName(String) void
   + setEmail(String) void
   + setIsBuyer(Boolean) void
   + setItems(List~Item~) void
@@ -422,9 +403,9 @@ class PersonConstraintsException {
 class PersonDTO {
   + PersonDTO(String, String, List~Item~) 
   + PersonDTO() 
+  - String email
   - String personName
   - List~Item~ items
-  - String email
   + getPersonName() String
   + getEmail() String
   + getItems() List~Item~
@@ -436,13 +417,13 @@ class PersonDTO {
 class PersonService {
   + PersonService() 
   - String EMAIL_MISSING_ERROR_MESSAGE
-  - String MISSING_NAME_ERROR_MESSAGE
   - String BUYER_ERROR
-  - convertAllConsumersToPerson(List~PersonDTO~) List~Person~
-  - convertToPerson(PersonDTO) Person
-  - validatePersonData(PersonDTO) PersonDTO
+  - String MISSING_NAME_ERROR_MESSAGE
   + getConsumers(PersonDTO, List~PersonDTO~) List~Person~
+  - convertToPerson(PersonDTO) Person
+  - convertAllConsumersToPerson(List~PersonDTO~) List~Person~
   - convertBuyerToPerson(PersonDTO) Person
+  - validatePersonData(PersonDTO) PersonDTO
 }
 class PersonServiceContract {
 <<Interface>>
@@ -479,14 +460,16 @@ class SplitInvoiceControllerContract {
 class SplitInvoiceRequest {
   + SplitInvoiceRequest(PersonDTO, BankAccount, List~PersonDTO~, DiscountType, Double, Double) 
   + SplitInvoiceRequest() 
-  - List~PersonDTO~ splitInvoiceWith
-  - BankAccount selectedBank
   - DiscountType discountType
-  - Double deliveryFee
   - Double discount
+  - Double deliveryFee
+  - BankAccount selectedBank
   - PersonDTO buyer
-  + getSelectedBank() BankAccount
+  - List~PersonDTO~ splitInvoiceWith
   + getBuyer() PersonDTO
+  + setDiscount(Double) void
+  + setDeliveryFee(Double) void
+  + getSelectedBank() BankAccount
   + getSplitInvoiceWith() List~PersonDTO~
   + getDiscountType() DiscountType
   + getDiscount() Double
@@ -494,10 +477,8 @@ class SplitInvoiceRequest {
   + getDeliveryFee() Double
   + setBuyer(PersonDTO) void
   + setSelectedBank(BankAccount) void
-  + setDiscount(Double) void
-  + setSplitInvoiceWith(List~PersonDTO~) void
-  + setDeliveryFee(Double) void
   + builder() SplitInvoiceRequestBuilder
+  + setSplitInvoiceWith(List~PersonDTO~) void
 }
 class SplitInvoiceResponse {
   + SplitInvoiceResponse(List~InvoiceDTO~, Double) 
@@ -519,6 +500,13 @@ class SplitInvoiceService {
 class SplitInvoiceServiceContract {
 <<Interface>>
   + splitInvoice(SplitInvoiceRequest) SplitInvoiceResponse
+}
+class ThymeLeafContextUtil {
+  - ThymeLeafContextUtil() 
+  - Context context
+  - String CONTEXT_GENERATION_ERROR
+  - Logger log
+  + generateBy(T) Context
 }
 class WebSecurityConfig {
   + WebSecurityConfig() 
@@ -554,6 +542,7 @@ DiscountStrategy  ..>  Person
 EmailService  ..>  EmailServiceContract 
 EmailService  ..>  NotificationEmail 
 EmailService "1" *--> "sendEmailAdapter 1" SendEmailAdapter 
+EmailService  ..>  ThymeLeafContextUtil 
 EmailServiceContract  ..>  NotificationEmail 
 HttpAdapter "1" *--> "restTemplateSimpleWebClient 1" RestTemplateSimpleWebClient 
 Invoice "1" *--> "items *" Item 
@@ -595,8 +584,6 @@ NotificationEmail "1" *--> "itens *" Item
 NotificationEmailMapper  ..>  BuildingStrategy~T, E~ 
 NotificationEmailMapper  ..>  Invoice 
 NotificationEmailMapper  ..>  NotificationEmail 
-Order "1" *--> "items *" Item 
-Order  ..>  Person 
 PercentageDiscountStrategy  ..>  BuilderMapper 
 PercentageDiscountStrategy  -->  DiscountStrategy 
 PercentageDiscountStrategy  ..>  DiscountType 

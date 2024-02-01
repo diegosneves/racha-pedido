@@ -13,7 +13,7 @@ import diegosneves.github.rachapedido.model.Person;
 public class InvoiceFromPersonMapper implements BuildingStrategy<Invoice, Person> {
 
     @Override
-    public Invoice run(Person origem) {
+    public Invoice mapper(Person origem) {
         return Invoice.builder()
                 .consumerName(origem.getPersonName())
                 .email(origem.getEmail())

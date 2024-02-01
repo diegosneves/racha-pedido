@@ -64,7 +64,7 @@ public interface BuilderMapper {
 			return BuilderMapper.builderMapper(destinationClass, source);
 		}
 
-		return strategy.run(source);
+		return strategy.mapper(source);
 	}
 
 
