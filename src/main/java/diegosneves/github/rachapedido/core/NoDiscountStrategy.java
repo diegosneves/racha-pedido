@@ -1,7 +1,7 @@
 package diegosneves.github.rachapedido.core;
 
 import diegosneves.github.rachapedido.enums.DiscountType;
-import diegosneves.github.rachapedido.mapper.BuilderMapper;
+import diegosneves.github.rachapedido.mapper.BuildingStrategy;
 import diegosneves.github.rachapedido.mapper.InvoiceFromPersonMapper;
 import diegosneves.github.rachapedido.model.Invoice;
 import diegosneves.github.rachapedido.model.Item;
@@ -22,8 +22,8 @@ public class NoDiscountStrategy extends DiscountStrategy {
         if (DiscountType.NO_DISCOUNT.name().equals(type.name())) {
             Double consumption = person.getItems().stream().mapToDouble(Item::getPrice).sum();
             Double percentageConsumedTotalBill = consumption / total;
-            InvoiceFromPersonMapper mapper = new InvoiceFromPersonMapper();
-            Invoice newInvoice = BuilderMapper.builderMapper(Invoice.class, person, mapper);
+            BuildingStrategy<Invoice, Person> invoicePersonBuildingStrategy = new InvoiceFromPersonMapper();
+            Invoice newInvoice = invoicePersonBuildingStrategy.mapper(person);
             newInvoice.setPercentageConsumedTotalBill(percentageConsumedTotalBill);
             newInvoice.setTotalPayable(RoundUtil.round((total - type.discountAmount(discountAmount) + deliveryFee) * percentageConsumedTotalBill));
             return newInvoice;

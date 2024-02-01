@@ -20,7 +20,7 @@ public class BuyerPersonMapper implements BuildingStrategy<Person, PersonDTO> {
      * O campo {@link Boolean isBuyer} é sempre definido como {@link Boolean#TRUE verdadeiro}.
      */
     @Override
-    public Person run(PersonDTO origem) {
+    public Person mapper(PersonDTO origem) {
         return Person.builder()
                 .personName(origem.getPersonName())
                 .isBuyer(Boolean.TRUE)

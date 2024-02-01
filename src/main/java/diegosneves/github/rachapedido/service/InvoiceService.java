@@ -5,6 +5,7 @@ import diegosneves.github.rachapedido.dto.InvoiceDTO;
 import diegosneves.github.rachapedido.enums.DiscountType;
 import diegosneves.github.rachapedido.exceptions.CalculateInvoiceException;
 import diegosneves.github.rachapedido.mapper.BuilderMapper;
+import diegosneves.github.rachapedido.mapper.BuildingStrategy;
 import diegosneves.github.rachapedido.mapper.NotificationEmailMapper;
 import diegosneves.github.rachapedido.model.*;
 import diegosneves.github.rachapedido.service.contract.EmailServiceContract;
@@ -61,8 +62,8 @@ public class InvoiceService implements InvoiceServiceContract {
      * @return uma lista de e-mails de notificação prontos para serem enviados
      */
     private List<NotificationEmail> preparateSendingEmailNotification(List<Invoice> invoices, BankAccount selectedBank) {
-        NotificationEmailMapper mapper = new NotificationEmailMapper();
-        List<NotificationEmail> notificationEmailList = invoices.stream().filter(invoice -> invoice.getIsBuyer() == Boolean.FALSE).map(invoice -> BuilderMapper.builderMapper(NotificationEmail.class, invoice, mapper)).toList();
+        BuildingStrategy<NotificationEmail, Invoice> notificationEmailMapper = new NotificationEmailMapper();
+        List<NotificationEmail> notificationEmailList = invoices.stream().filter(invoice -> invoice.getIsBuyer() == Boolean.FALSE).map(notificationEmailMapper::mapper).toList();
         notificationEmailList.forEach(notificationEmail -> notificationEmail.setLink(selectedBank.paymentLink(notificationEmail.getTotal())));
         notificationEmailList.forEach(notificationEmail -> notificationEmail.setBank(selectedBank.toString()));
         return notificationEmailList;
