@@ -3,6 +3,7 @@ package diegosneves.github.rachapedido.service;
 import diegosneves.github.rachapedido.dto.PersonDTO;
 import diegosneves.github.rachapedido.exceptions.PersonConstraintsException;
 import diegosneves.github.rachapedido.mapper.BuilderMapper;
+import diegosneves.github.rachapedido.mapper.BuildingStrategy;
 import diegosneves.github.rachapedido.mapper.BuyerPersonMapper;
 import diegosneves.github.rachapedido.model.Person;
 import diegosneves.github.rachapedido.service.contract.PersonServiceContract;
@@ -85,7 +86,7 @@ public class PersonService implements PersonServiceContract {
      * @return O objeto {@link Person} que representa um comprador, resultado da conversão.
      */
     private Person convertBuyerToPerson(PersonDTO buyer) {
-        BuyerPersonMapper mapper = new BuyerPersonMapper();
-        return BuilderMapper.builderMapper(Person.class, this.validatePersonData(buyer), mapper);
+        BuildingStrategy<Person, PersonDTO> buyerPersonMapper = new BuyerPersonMapper();
+        return buyerPersonMapper.mapper(this.validatePersonData(buyer));
     }
 }

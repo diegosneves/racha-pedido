@@ -11,7 +11,7 @@ import diegosneves.github.rachapedido.model.NotificationEmail;
 public class NotificationEmailMapper implements BuildingStrategy <NotificationEmail, Invoice> {
 
     @Override
-    public NotificationEmail run(Invoice origem) {
+    public NotificationEmail mapper(Invoice origem) {
         return NotificationEmail.builder()
                 .consumerName(origem.getConsumerName())
                 .email(origem.getEmail())
