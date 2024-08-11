@@ -20,7 +20,7 @@ spring:
           ssl.trust: smtp.gmail.com
 
   kafka:
-    bootstrap-servers: host.docker.internal:9094
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS}
     listener:
       missing-topics-fatal: false
     consumer:
