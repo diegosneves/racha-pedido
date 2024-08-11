@@ -15,6 +15,6 @@ services:
     environment:
       - EMAIL_HOST=email_server
       - EMAIL_PORT=8081
-      - KAFKA_BOOTSTRAP_SERVERS=kafka:9094
+      - KAFKA_BOOTSTRAP_SERVERS=host.docker.internal:9094
     extra_hosts:
       - "host.docker.internal:172.17.0.1"
