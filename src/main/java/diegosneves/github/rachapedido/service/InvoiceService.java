@@ -4,6 +4,7 @@ import diegosneves.github.rachapedido.core.*;
 import diegosneves.github.rachapedido.dto.InvoiceDTO;
 import diegosneves.github.rachapedido.enums.DiscountType;
 import diegosneves.github.rachapedido.exceptions.CalculateInvoiceException;
+import diegosneves.github.rachapedido.infrastructure.KafkaProducer;
 import diegosneves.github.rachapedido.mapper.BuilderMapper;
 import diegosneves.github.rachapedido.mapper.BuildingStrategy;
 import diegosneves.github.rachapedido.mapper.NotificationEmailMapper;
@@ -11,6 +12,7 @@ import diegosneves.github.rachapedido.model.*;
 import diegosneves.github.rachapedido.service.contract.EmailServiceContract;
 import diegosneves.github.rachapedido.service.contract.InvoiceServiceContract;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -35,11 +37,16 @@ public class InvoiceService implements InvoiceServiceContract {
     private static final String CALCULATION_ERROR_MESSAGE = "Houve um problema ao calcular o valor total do pedido.";
     private static final String NULL_PARAMETER_ERROR_MESSAGE = "Um dos parâmetros necessários para a operação de cálculo da fatura está ausente ou nulo.";
     private static final String VOID = "";
-    private final EmailServiceContract emailService;
+
+    private final KafkaProducer kafkaProducer;
+
+
+    private final String emailNotificationTopic;
 
     @Autowired
-    public InvoiceService(EmailServiceContract emailService) {
-        this.emailService = emailService;
+    public InvoiceService(KafkaProducer kafkaProducer, @Value("${spring.kafka.topics.send_email}") String emailNotificationTopic) {
+        this.kafkaProducer = kafkaProducer;
+        this.emailNotificationTopic = emailNotificationTopic;
     }
 
     @Override
@@ -85,7 +92,9 @@ public class InvoiceService implements InvoiceServiceContract {
                 invoice.setPaymentLink(VOID);
             }
         });
-        notificationEmails.forEach(this.emailService::sendEmail);
+        for(NotificationEmail notificationEmail : notificationEmails) {
+            this.kafkaProducer.convertObjectToJsonAndSend(this.emailNotificationTopic, notificationEmail);
+        }
         Double total = unpaidInvoices.stream().mapToDouble(Invoice::getTotalPayable).sum();
         List<InvoiceDTO> invoiceDTOs = unpaidInvoices.stream().map(this::convertToInvoiceDTO).toList();
         return BillSplit.builder()
